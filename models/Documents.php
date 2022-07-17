@@ -14,23 +14,24 @@ use Yii;
  * @property string $post_code
  * @property string $post_code_first_part
  * @property string $client
- * @property string $purpose_of_valuation
  * @property string $borrower
- * @property string $limited_liability
+ * @property int $limited_liability
  * @property string $same_as_inspection
- * @property string $valuation_date
- * @property string $inspection_date
- * @property string $report_date
+ * @property string|null $valuation_date
+ * @property string|null $inspection_date
+ * @property string|null $report_date
  * @property string $cj_ref
- * @property string $clinet_ref
+ * @property string $client_ref
  * @property string $valuer
  * @property string $valuer_2
- * @property string $double_signed
- * @property string $tenure
- * @property string $basis_of_value
- * @property string $sector_overview
- * @property string $methodology
- * @property string $appendicies
+ * @property int $double_signed
+ *
+ * @property DocumentsAppendicies[] $documentsAppendicies
+ * @property DocumentsBasisOfValue[] $documentsBasisOfValues
+ * @property DocumentsMethodology[] $documentsMethodologies
+ * @property DocumentsPurposeOfValuation[] $documentsPurposeOfValuations
+ * @property DocumentsSectorOverview[] $documentsSectorOverviews
+ * @property DocumentsTenure[] $documentsTenures
  */
 class Documents extends \yii\db\ActiveRecord
 {
@@ -48,9 +49,10 @@ class Documents extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['property_number', 'street', 'town', 'post_code', 'post_code_first_part', 'client', 'purpose_of_valuation', 'borrower', 'limited_liability', 'same_as_inspection', 'valuation_date', 'inspection_date', 'report_date', 'cj_ref', 'clinet_ref', 'valuer', 'valuer_2', 'double_signed', 'tenure', 'basis_of_value', 'sector_overview', 'methodology', 'appendicies'], 'required'],
+            [['property_number', 'street', 'town', 'post_code', 'post_code_first_part', 'client', 'borrower', 'limited_liability', 'same_as_inspection', 'cj_ref', 'client_ref', 'valuer', 'valuer_2', 'double_signed'], 'required'],
+            [['limited_liability', 'double_signed'], 'integer'],
             [['valuation_date', 'inspection_date', 'report_date'], 'safe'],
-            [['property_number', 'street', 'town', 'post_code', 'post_code_first_part', 'client', 'purpose_of_valuation', 'borrower', 'limited_liability', 'same_as_inspection', 'cj_ref', 'clinet_ref', 'valuer', 'valuer_2', 'double_signed', 'tenure', 'basis_of_value', 'sector_overview', 'methodology', 'appendicies'], 'string', 'max' => 255],
+            [['property_number', 'street', 'town', 'post_code', 'post_code_first_part', 'client', 'borrower', 'same_as_inspection', 'cj_ref', 'client_ref', 'valuer', 'valuer_2'], 'string', 'max' => 255],
         ];
     }
 
@@ -67,7 +69,6 @@ class Documents extends \yii\db\ActiveRecord
             'post_code' => 'Post Code',
             'post_code_first_part' => 'Post Code First Part',
             'client' => 'Client',
-            'purpose_of_valuation' => 'Purpose Of Valuation',
             'borrower' => 'Borrower',
             'limited_liability' => 'Limited Liability',
             'same_as_inspection' => 'Same As Inspection',
@@ -75,15 +76,70 @@ class Documents extends \yii\db\ActiveRecord
             'inspection_date' => 'Inspection Date',
             'report_date' => 'Report Date',
             'cj_ref' => 'Cj Ref',
-            'clinet_ref' => 'Clinet Ref',
+            'client_ref' => 'Client Ref',
             'valuer' => 'Valuer',
             'valuer_2' => 'Valuer  2',
             'double_signed' => 'Double Signed',
-            'tenure' => 'Tenure',
-            'basis_of_value' => 'Basis Of Value',
-            'sector_overview' => 'Sector Overview',
-            'methodology' => 'Methodology',
-            'appendicies' => 'Appendicies',
         ];
+    }
+
+    /**
+     * Gets query for [[DocumentsAppendicies]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getDocumentsAppendicies()
+    {
+        return $this->hasMany(DocumentsAppendicies::className(), ['documents_id' => 'id']);
+    }
+
+    /**
+     * Gets query for [[DocumentsBasisOfValues]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getDocumentsBasisOfValues()
+    {
+        return $this->hasMany(DocumentsBasisOfValue::className(), ['documents_id' => 'id']);
+    }
+
+    /**
+     * Gets query for [[DocumentsMethodologies]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getDocumentsMethodologies()
+    {
+        return $this->hasMany(DocumentsMethodology::className(), ['documents_id' => 'id']);
+    }
+
+    /**
+     * Gets query for [[DocumentsPurposeOfValuations]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getDocumentsPurposeOfValuations()
+    {
+        return $this->hasMany(DocumentsPurposeOfValuation::className(), ['documents_id' => 'id']);
+    }
+
+    /**
+     * Gets query for [[DocumentsSectorOverviews]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getDocumentsSectorOverviews()
+    {
+        return $this->hasMany(DocumentsSectorOverview::className(), ['documents_id' => 'id']);
+    }
+
+    /**
+     * Gets query for [[DocumentsTenures]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getDocumentsTenures()
+    {
+        return $this->hasMany(DocumentsTenure::className(), ['documents_id' => 'id']);
     }
 }

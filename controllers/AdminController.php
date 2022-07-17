@@ -2,7 +2,9 @@
 
 namespace app\controllers;
 
+use app\models\forms\AddDocumentToBdForm;
 use app\models\forms\AdminLoginForm;
+use app\services\documents\AddAdminDocumentService;
 use Yii;
 use yii\filters\AccessControl;
 
@@ -62,6 +64,21 @@ class AdminController extends \yii\web\Controller
     }
     public function actionAdd()
     {
-        return $this->render('add');
+        $addDocumentToBdForm = new AddDocumentToBdForm();
+        if (Yii::$app->request->post()){
+            $addDocumentToBdForm->load(Yii::$app->request->post());
+            if ($addDocumentToBdForm->validate()){
+                $addDocument = new AddAdminDocumentService();
+                $addDocument->addDocument($addDocumentToBdForm);
+
+            } else {
+                var_dump($addDocumentToBdForm->errors);
+            }
+
+        }
+
+
+
+        return $this->render('add',['addDocumentToBdForm'=>$addDocumentToBdForm]);
     }
 }
