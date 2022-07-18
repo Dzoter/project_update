@@ -56,10 +56,10 @@ $config = [
                 'admin/login' => 'admin/login',
                 'admin/logout' => 'admin/logout',
                 'admin/add' => 'admin/add',
-                'admin/edit/<docId:\d+>' => 'admin/edit',
-                'admin/delete/<docId:\d+>' => 'admin/delete',
-                'admin/documents/<page:\d+>' => 'admin/documents',
-                'admin/documents' => 'admin/documents'
+                'admin/edit/<documentId:\d+>' => 'admin/edit',
+                'admin/delete/<documentId:\d+>' => 'admin/delete',
+
+
             ],
         ],
 

@@ -142,4 +142,8 @@ class Documents extends \yii\db\ActiveRecord
     {
         return $this->hasMany(DocumentsTenure::className(), ['documents_id' => 'id']);
     }
+    public function getId()
+    {
+        return $this->id;
+    }
 }

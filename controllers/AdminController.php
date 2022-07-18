@@ -2,11 +2,17 @@
 
 namespace app\controllers;
 
+use app\models\Documents;
 use app\models\forms\AddDocumentToBdForm;
 use app\models\forms\AdminLoginForm;
 use app\services\documents\AddAdminDocumentService;
+use app\services\documents\GetAllSecondaryInfoOfDocumentsService;
+use app\services\documents\SearchDocumentsService;
 use Yii;
+use yii\data\Pagination;
 use yii\filters\AccessControl;
+use yii\helpers\Url;
+
 
 class AdminController extends \yii\web\Controller
 {
@@ -22,7 +28,7 @@ class AdminController extends \yii\web\Controller
                 'rules'        => [
                     [
                         'allow'   => true,
-                        'actions' => ['add','logout'],
+                        'actions' => ['add', 'logout','edit','documents','delete','edit'],
                         'roles'   => ['@'],
                     ],
                     [
@@ -47,7 +53,7 @@ class AdminController extends \yii\web\Controller
 
         $adminLogin = new AdminLoginForm();
         if ($adminLogin->load(Yii::$app->request->post()) && $adminLogin->login()) {
-            return Yii::$app->response->redirect(["admin/add/"]);
+            return Yii::$app->response->redirect(["admin/documents/"]);
         }
 
         $adminLogin->password = '';
@@ -57,28 +63,78 @@ class AdminController extends \yii\web\Controller
         ]);
     }
 
-    public function actionLogout(){
+    public function actionLogout()
+    {
         Yii::$app->user->logout();
 
         return $this->goHome();
     }
+
     public function actionAdd()
     {
         $addDocumentToBdForm = new AddDocumentToBdForm();
-        if (Yii::$app->request->post()){
+        if (Yii::$app->request->post()) {
             $addDocumentToBdForm->load(Yii::$app->request->post());
-            if ($addDocumentToBdForm->validate()){
+            if ($addDocumentToBdForm->validate()) {
                 $addDocument = new AddAdminDocumentService();
-                $addDocument->addDocument($addDocumentToBdForm);
+                $addDocument->addDocument($addDocumentToBdForm,'add');
+                return Yii::$app->response->redirect(["admin/documents/"]);
 
-            } else {
-                var_dump($addDocumentToBdForm->errors);
+            }
+
+        }
+        return $this->render('add', ['addDocumentToBdForm' => $addDocumentToBdForm]);
+    }
+
+    public function actionEdit($documentId)
+    {
+        $document = Documents::find()->where(['id'=>$documentId])->one();
+
+        $updateDocumentToBdForm = new AddDocumentToBdForm();
+        if (Yii::$app->request->post()) {
+            $updateDocumentToBdForm->load(Yii::$app->request->post());
+            if ($updateDocumentToBdForm->validate()) {
+                $addDocument = new AddAdminDocumentService();
+                $addDocument->updateDocument($documentId,$updateDocumentToBdForm);
+
+                return Yii::$app->response->redirect(["admin/documents/"]);
             }
 
         }
 
+        return $this->render('edit',['document'=>$document,'updateDocumentToBdForm'=>$updateDocumentToBdForm]);
+    }
+
+    public function actionDocuments()
+    {
+        $documentSearchService = new SearchDocumentsService();
+        $query = $documentSearchService->search();
+
+        $countQuery = clone $query;
+
+        $pages = new Pagination(
+            [
+
+                'totalCount'     => $countQuery->count(),
+                'defaultPageSize'       => 5,
+                'forcePageParam' => false,
+                'pageSizeParam'  => false,
+                'pageParam' => Url::to(['admin/documents'])
+
+            ]
+        );
+
+        $documents = $countQuery->offset($pages->offset)->limit($pages->limit)->all();
 
 
-        return $this->render('add',['addDocumentToBdForm'=>$addDocumentToBdForm]);
+        return $this->render('documents',['documents'=>$documents,'pages'=>$pages]);
+    }
+
+    public function actionDelete($documentId)
+    {
+        $deleteDocument = new AddAdminDocumentService();
+        $deleteDocument->deleteDocument($documentId);
+        return Yii::$app->response->redirect(["admin/documents/"]);
+
     }
 }
