@@ -57,10 +57,13 @@ AdminAsset::register($this);
                             Menu
                         </li>
                         <li class="nav-item ">
-                            <a class="nav-link active" href="index.html"><i class="fas fa-fw fa-file"></i>Documents <span class="badge badge-success">6</span></a>
+                            <a class="nav-link active" href="<?=\yii\helpers\Url::to(['admin/documents'])?>"><i class="fas fa-fw
+                            fa-file"></i>Documents <span
+                                        class="badge badge-success">6</span></a>
                         </li>
                         <li class="nav-item ">
-                            <a class="nav-link active" href="index.html"><i class="far fa-plus-square"></i>Add document <span class="badge badge-success">6</span></a>
+                            <a class="nav-link active" href="<?=\yii\helpers\Url::to(['admin/add'])?>"><i class="far
+                            fa-plus-square"></i>Add document <span class="badge badge-success">6</span></a>
                         </li>
                         <li class="nav-item ">
                             <a class="nav-link active" href="index.html"><i class="far fa-plus-square"></i>Sector overview <span class="badge badge-success">6</span></a>

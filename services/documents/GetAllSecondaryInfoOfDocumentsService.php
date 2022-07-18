@@ -5,6 +5,7 @@ namespace app\services\documents;
 use app\models\Appendicies;
 use app\models\BasisOfValue;
 use app\models\Documents;
+use app\models\Files;
 use app\models\Methodology;
 use app\models\PurposeOfValuation;
 use app\models\SectorOverview;
@@ -123,4 +124,24 @@ class GetAllSecondaryInfoOfDocumentsService
         }
         return $secondaryData;
     }
+
+    public static function getSecondaryInfoFiles($documentId)
+    {
+        $document = Documents::find()->where(['id'=>$documentId])->one();
+        $secondaryData = [];
+        $idsData = [];
+
+        if ($document->documentsFiles){
+            foreach ($document->documentsFiles as $secondaryTables => $secondaryTable){
+                $idsData[] = $secondaryTable->files_id;
+            }
+            foreach ($idsData as $id){
+                $table = Files::find()->where(['id'=>$id])->one();
+                $secondaryData[] = $table;
+            }
+
+        }
+        return $secondaryData;
+    }
+
 }

@@ -44,6 +44,7 @@ class AddDocumentToBdForm extends Model
     public $sector_overview_ids_right;
     public $methodology_ids_right;
     public $appendicies_ids_right;
+    public $files;
 
 
     public function rules()
@@ -73,18 +74,31 @@ class AddDocumentToBdForm extends Model
                 'skipOnEmpty' => false,
             ],
             [
-                [
-
-
-
-
-
-
-
-                ],
-                'string'
+                ['files'],
+                'file',
+                'maxSize'  => 1024 * 1024 * 0.5,
+                'maxFiles' => 4,
+                'tooBig'   => 'файл слишком большой',
             ],
-            [['same_as_inspection','tenure_ids','double_signed','limited_liability','purpose_of_Valuation_ids','basis_of_value_ids','appendicies_ids','appendicies_ids_right','sector_overview_ids','sector_overview_ids_right','basis_of_value_ids','basis_of_value_ids_right','methodology_ids','methodology_ids_right'],'safe']
+            [
+                [
+                    'same_as_inspection',
+                    'tenure_ids',
+                    'double_signed',
+                    'limited_liability',
+                    'purpose_of_Valuation_ids',
+                    'basis_of_value_ids',
+                    'appendicies_ids',
+                    'appendicies_ids_right',
+                    'sector_overview_ids',
+                    'sector_overview_ids_right',
+                    'basis_of_value_ids',
+                    'basis_of_value_ids_right',
+                    'methodology_ids',
+                    'methodology_ids_right',
+                ],
+                'safe',
+            ],
 
 
         ];

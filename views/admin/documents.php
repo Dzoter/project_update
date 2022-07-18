@@ -26,7 +26,7 @@
 
                             <?php foreach ($documents as $document):?>
                                 <tr>
-                                    <td><?=$document->valuation_date?></td>
+                                    <td><?=$document->id?></td>
                                     <td><a href="<?=\yii\helpers\Url::to(["admin/edit/$document->id"])?>" class="btn
                                     btn-primary">Редактировать</a></td>
                                     <td><a href="<?=\yii\helpers\Url::to(["admin/delete/$document->id"])?>" class="btn

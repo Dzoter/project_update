@@ -5,11 +5,14 @@ namespace app\services\documents;
 use app\models\Documents;
 use app\models\DocumentsAppendicies;
 use app\models\DocumentsBasisOfValue;
+use app\models\DocumentsFiles;
 use app\models\DocumentsMethodology;
 use app\models\DocumentsPurposeOfValuation;
 use app\models\DocumentsSectorOverview;
 use app\models\DocumentsTenure;
+use app\models\Files;
 use app\models\forms\AddDocumentToBdForm;
+use yii\web\UploadedFile;
 
 class AddAdminDocumentService
 {
@@ -121,6 +124,31 @@ class AddAdminDocumentService
             $tenure->documents_id = $documentId;
             $tenure->tenure_id = $addDocumentToBdForm->purpose_of_Valuation_ids;
             $tenure->save();
+        }
+
+        $addDocumentToBdForm->files = UploadedFile::getInstances($addDocumentToBdForm, 'files');
+
+        if ($addDocumentToBdForm->files){
+            if (!mkdir($concurrentDirectory = "uploadedImg/".(string)$documentId) && !is_dir($concurrentDirectory)) {
+                throw new \RuntimeException(sprintf('Directory "%s" was not created', $concurrentDirectory));
+            }
+            $path = "uploadedImg/"."$documentId/";
+            foreach ($addDocumentToBdForm->files as $file) {
+                $fileName = $file->baseName.'.'.$file->extension;
+
+                $file->saveAs(
+                    $path.$fileName
+                );
+                $newFile = new Files();
+                $newFile->path = (string)$path.(string)$fileName;
+                $newFile->name = (string)$fileName;
+                $newFile->save();
+
+                $documentsFile = new DocumentsFiles();
+                $documentsFile->files_id = $newFile->getId();
+                $documentsFile->documents_id = $documentId;
+                $documentsFile->save();
+            }
         }
     }
 

@@ -3,6 +3,7 @@
 
 /** @var object $updateDocumentToBdForm */
 
+use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 
 
@@ -366,14 +367,14 @@ use yii\widgets\ActiveForm;
                                 'item' => function ($index, $label, $name, $checked, $value) {
                                     $return = '<label class="custom-control custom-radio">';
                                     $arrayOfSecondTable
-                                        =
-                                        \app\services\documents\GetAllSecondaryInfoOfDocumentsService::getSecondaryInfoTenure(
+                                        = \app\services\documents\GetAllSecondaryInfoOfDocumentsService::getSecondaryInfoTenure(
                                         Yii::$app->request->get('documentId')
                                     );
                                     if ($arrayOfSecondTable) {
                                         foreach ($arrayOfSecondTable as $id => $tableName) {
                                             if ($tableName === $label) {
-                                                $return .= '<input class="custom-control-input" type="radio" name="'.$name
+                                                $return .= '<input class="custom-control-input" type="radio" name="'
+                                                    .$name
                                                     .'" value="'.$value.'" tabindex="3" checked>';
                                             }
                                         }
@@ -422,14 +423,15 @@ use yii\widgets\ActiveForm;
                                 'item' => function ($index, $label, $name, $checked, $value) {
                                     $return = '<label class="custom-control custom-checkbox">';
 
-                                    $arrayOfSecondTable =
-                                        \app\services\documents\GetAllSecondaryInfoOfDocumentsService::getSecondaryInfoBasis(
-                                            Yii::$app->request->get('documentId')
-                                        );
+                                    $arrayOfSecondTable
+                                        = \app\services\documents\GetAllSecondaryInfoOfDocumentsService::getSecondaryInfoBasis(
+                                        Yii::$app->request->get('documentId')
+                                    );
                                     if ($arrayOfSecondTable) {
                                         foreach ($arrayOfSecondTable as $id => $tableName) {
                                             if ($tableName === $label) {
-                                                $return .= '<input class="custom-control-input" type="checkbox" name="'.$name.
+                                                $return .= '<input class="custom-control-input" type="checkbox" name="'
+                                                    .$name.
                                                     '" value="'.$value.'" tabindex="3" checked>';
                                             }
                                         }
@@ -470,14 +472,15 @@ use yii\widgets\ActiveForm;
                                 'item' => function ($index, $label, $name, $checked, $value) {
                                     $return = '<label class="custom-control custom-checkbox">';
 
-                                    $arrayOfSecondTable =
-                                        \app\services\documents\GetAllSecondaryInfoOfDocumentsService::getSecondaryInfoBasis(
-                                            Yii::$app->request->get('documentId')
-                                        );
+                                    $arrayOfSecondTable
+                                        = \app\services\documents\GetAllSecondaryInfoOfDocumentsService::getSecondaryInfoBasis(
+                                        Yii::$app->request->get('documentId')
+                                    );
                                     if ($arrayOfSecondTable) {
                                         foreach ($arrayOfSecondTable as $id => $tableName) {
                                             if ($tableName === $label) {
-                                                $return .= '<input class="custom-control-input" type="checkbox" name="'.$name.
+                                                $return .= '<input class="custom-control-input" type="checkbox" name="'
+                                                    .$name.
                                                     '" value="'.$value.'" tabindex="3" checked>';
                                             }
                                         }
@@ -518,15 +521,15 @@ use yii\widgets\ActiveForm;
                             [
                                 'item' => function ($index, $label, $name, $checked, $value) {
                                     $return = '<label class="custom-control custom-checkbox">';
-                                    $arrayOfSecondTable =
-                                        \app\services\documents\GetAllSecondaryInfoOfDocumentsService
-                                            ::getSecondaryInfoSector(
+                                    $arrayOfSecondTable = \app\services\documents\GetAllSecondaryInfoOfDocumentsService
+                                        ::getSecondaryInfoSector(
                                             Yii::$app->request->get('documentId')
                                         );
                                     if ($arrayOfSecondTable) {
                                         foreach ($arrayOfSecondTable as $id => $tableName) {
                                             if ($tableName === $label) {
-                                                $return .= '<input class="custom-control-input" type="checkbox" name="'.$name.
+                                                $return .= '<input class="custom-control-input" type="checkbox" name="'
+                                                    .$name.
                                                     '" value="'.$value.'" tabindex="3" checked>';
                                             }
                                         }
@@ -563,15 +566,15 @@ use yii\widgets\ActiveForm;
                                 'item' => function ($index, $label, $name, $checked, $value) {
                                     $return = '<label class="custom-control custom-checkbox">';
 
-                                    $arrayOfSecondTable =
-                                        \app\services\documents\GetAllSecondaryInfoOfDocumentsService
-                                            ::getSecondaryInfoSector(
-                                                Yii::$app->request->get('documentId')
-                                            );
+                                    $arrayOfSecondTable = \app\services\documents\GetAllSecondaryInfoOfDocumentsService
+                                        ::getSecondaryInfoSector(
+                                            Yii::$app->request->get('documentId')
+                                        );
                                     if ($arrayOfSecondTable) {
                                         foreach ($arrayOfSecondTable as $id => $tableName) {
                                             if ($tableName === $label) {
-                                                $return .= '<input class="custom-control-input" type="checkbox" name="'.$name.
+                                                $return .= '<input class="custom-control-input" type="checkbox" name="'
+                                                    .$name.
                                                     '" value="'.$value.'" tabindex="3" checked>';
                                             }
                                         }
@@ -615,15 +618,15 @@ use yii\widgets\ActiveForm;
 
                                 'item' => function ($index, $label, $name, $checked, $value) {
                                     $return = '<label class="custom-control custom-checkbox">';
-                                    $arrayOfSecondTable =
-                                        \app\services\documents\GetAllSecondaryInfoOfDocumentsService
-                                            ::getSecondaryInfoMethodology(
-                                                Yii::$app->request->get('documentId')
-                                            );
+                                    $arrayOfSecondTable = \app\services\documents\GetAllSecondaryInfoOfDocumentsService
+                                        ::getSecondaryInfoMethodology(
+                                            Yii::$app->request->get('documentId')
+                                        );
                                     if ($arrayOfSecondTable) {
                                         foreach ($arrayOfSecondTable as $id => $tableName) {
                                             if ($tableName === $label) {
-                                                $return .= '<input class="custom-control-input" type="checkbox" name="'.$name.
+                                                $return .= '<input class="custom-control-input" type="checkbox" name="'
+                                                    .$name.
                                                     '" value="'.$value.'" tabindex="3" checked>';
                                             }
                                         }
@@ -661,15 +664,15 @@ use yii\widgets\ActiveForm;
 
                                 'item' => function ($index, $label, $name, $checked, $value) {
                                     $return = '<label class="custom-control custom-checkbox">';
-                                    $arrayOfSecondTable =
-                                        \app\services\documents\GetAllSecondaryInfoOfDocumentsService
-                                            ::getSecondaryInfoMethodology(
-                                                Yii::$app->request->get('documentId')
-                                            );
+                                    $arrayOfSecondTable = \app\services\documents\GetAllSecondaryInfoOfDocumentsService
+                                        ::getSecondaryInfoMethodology(
+                                            Yii::$app->request->get('documentId')
+                                        );
                                     if ($arrayOfSecondTable) {
                                         foreach ($arrayOfSecondTable as $id => $tableName) {
                                             if ($tableName === $label) {
-                                                $return .= '<input class="custom-control-input" type="checkbox" name="'.$name.
+                                                $return .= '<input class="custom-control-input" type="checkbox" name="'
+                                                    .$name.
                                                     '" value="'.$value.'" tabindex="3" checked>';
                                             }
                                         }
@@ -713,15 +716,15 @@ use yii\widgets\ActiveForm;
 
                                 'item' => function ($index, $label, $name, $checked, $value) {
                                     $return = '<label class="custom-control custom-checkbox">';
-                                    $arrayOfSecondTable =
-                                        \app\services\documents\GetAllSecondaryInfoOfDocumentsService
-                                            ::getSecondaryInfoAppendicies(
-                                                Yii::$app->request->get('documentId')
-                                            );
+                                    $arrayOfSecondTable = \app\services\documents\GetAllSecondaryInfoOfDocumentsService
+                                        ::getSecondaryInfoAppendicies(
+                                            Yii::$app->request->get('documentId')
+                                        );
                                     if ($arrayOfSecondTable) {
                                         foreach ($arrayOfSecondTable as $id => $tableName) {
                                             if ($tableName === $label) {
-                                                $return .= '<input class="custom-control-input" type="checkbox" name="'.$name.
+                                                $return .= '<input class="custom-control-input" type="checkbox" name="'
+                                                    .$name.
                                                     '" value="'.$value.'" tabindex="3" checked>';
                                             }
                                         }
@@ -760,15 +763,15 @@ use yii\widgets\ActiveForm;
 
                                 'item' => function ($index, $label, $name, $checked, $value) {
                                     $return = '<label class="custom-control custom-checkbox">';
-                                    $arrayOfSecondTable =
-                                        \app\services\documents\GetAllSecondaryInfoOfDocumentsService
-                                            ::getSecondaryInfoAppendicies(
-                                                Yii::$app->request->get('documentId')
-                                            );
+                                    $arrayOfSecondTable = \app\services\documents\GetAllSecondaryInfoOfDocumentsService
+                                        ::getSecondaryInfoAppendicies(
+                                            Yii::$app->request->get('documentId')
+                                        );
                                     if ($arrayOfSecondTable) {
                                         foreach ($arrayOfSecondTable as $id => $tableName) {
                                             if ($tableName === $label) {
-                                                $return .= '<input class="custom-control-input" type="checkbox" name="'.$name.
+                                                $return .= '<input class="custom-control-input" type="checkbox" name="'
+                                                    .$name.
                                                     '" value="'.$value.'" tabindex="3" checked>';
                                             }
                                         }
@@ -797,6 +800,24 @@ use yii\widgets\ActiveForm;
 
                     <?php
                     ActiveForm::end(); ?>
+                    <hr>
+                    <hr>
+                    <hr>
+                    <hr>
+                    <?php
+                    $files = \app\services\documents\GetAllSecondaryInfoOfDocumentsService::getSecondaryInfoFiles
+                    (
+                        $document->id
+                    );
+                    foreach ($files as $file):?>
+                    <img src="<?=Url::to('/'.$file->path)?>" width="300px" height="300px" alt="Изображения загруженные при добавлении документа">
+
+                    <?php endforeach; ?>
+
+
+
+
+
 
 
                     <!--                    <form action="/admin/add" method="post">-->
