@@ -44,10 +44,7 @@ class AddAdminDocumentService
         $document->save();
         $documentId = $document->getId();
 
-        $basisOfValues = new DocumentsBasisOfValue();
-        $basisOfValues->documents_id = 1;
-        $basisOfValues->basis_of_value_id = 1;
-        $basisOfValues->save();
+
 
         if ($addDocumentToBdForm->basis_of_value_ids) {
             foreach ($addDocumentToBdForm->basis_of_value_ids as $key => $basisOfValueId) {
@@ -119,14 +116,15 @@ class AddAdminDocumentService
             $purpur->purpose_of_valuation_id = $addDocumentToBdForm->purpose_of_Valuation_ids;
             $purpur->save();
         }
-        if ($addDocumentToBdForm->purpose_of_Valuation_ids) {
+        if ($addDocumentToBdForm->tenure_ids) {
             $tenure = new DocumentsTenure();
             $tenure->documents_id = $documentId;
-            $tenure->tenure_id = $addDocumentToBdForm->purpose_of_Valuation_ids;
+            $tenure->tenure_id = $addDocumentToBdForm->tenure_ids;
             $tenure->save();
         }
 
         $addDocumentToBdForm->files = UploadedFile::getInstances($addDocumentToBdForm, 'files');
+
 
         if ($addDocumentToBdForm->files){
             if (!mkdir($concurrentDirectory = "uploadedImg/".(string)$documentId) && !is_dir($concurrentDirectory)) {
@@ -207,5 +205,10 @@ class AddAdminDocumentService
         $document->delete();
     }
 
+    public function createDocx(){
 
+
+
+
+    }
 }

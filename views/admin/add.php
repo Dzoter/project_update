@@ -590,6 +590,7 @@ use yii\widgets\ActiveForm;
                             'files[]')->fileInput([
                             'multiple' => true,
                         ]) ?>
+
                     </div>
 
 

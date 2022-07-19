@@ -6,12 +6,8 @@ use app\models\Documents;
 use app\models\forms\AddDocumentToBdForm;
 use app\models\forms\AdminLoginForm;
 use app\services\documents\AddAdminDocumentService;
-use app\services\documents\GetAllSecondaryInfoOfDocumentsService;
-use app\services\documents\SearchDocumentsService;
 use Yii;
-use yii\data\Pagination;
 use yii\filters\AccessControl;
-use yii\helpers\Url;
 
 
 class AdminController extends \yii\web\Controller
@@ -28,7 +24,7 @@ class AdminController extends \yii\web\Controller
                 'rules'        => [
                     [
                         'allow'   => true,
-                        'actions' => ['add', 'logout','edit','documents','delete','edit'],
+                        'actions' => ['add', 'logout', 'edit', 'documents', 'delete', 'edit','test'],
                         'roles'   => ['@'],
                     ],
                     [
@@ -77,36 +73,36 @@ class AdminController extends \yii\web\Controller
             $addDocumentToBdForm->load(Yii::$app->request->post());
             if ($addDocumentToBdForm->validate()) {
                 $addDocument = new AddAdminDocumentService();
-                $addDocument->addDocument($addDocumentToBdForm,'add');
+                $addDocument->addDocument($addDocumentToBdForm, 'add');
+
                 return Yii::$app->response->redirect(["admin/documents/"]);
-
             }
-
         }
+
         return $this->render('add', ['addDocumentToBdForm' => $addDocumentToBdForm]);
     }
 
     public function actionEdit($documentId)
     {
-        $document = Documents::find()->where(['id'=>$documentId])->one();
+        $document = Documents::find()->where(['id' => $documentId])->one();
 
         $updateDocumentToBdForm = new AddDocumentToBdForm();
         if (Yii::$app->request->post()) {
             $updateDocumentToBdForm->load(Yii::$app->request->post());
             if ($updateDocumentToBdForm->validate()) {
                 $addDocument = new AddAdminDocumentService();
-                $addDocument->updateDocument($documentId,$updateDocumentToBdForm);
+                $addDocument->updateDocument($documentId, $updateDocumentToBdForm);
 
                 return Yii::$app->response->redirect(["admin/documents/"]);
             }
-
         }
 
-        return $this->render('edit',['document'=>$document,'updateDocumentToBdForm'=>$updateDocumentToBdForm]);
+        return $this->render('edit', ['document' => $document, 'updateDocumentToBdForm' => $updateDocumentToBdForm]);
     }
 
     public function actionDocuments()
     {
+
         $documentSearchService = new SearchDocumentsService();
         $query = $documentSearchService->search();
 
@@ -134,7 +130,13 @@ class AdminController extends \yii\web\Controller
     {
         $deleteDocument = new AddAdminDocumentService();
         $deleteDocument->deleteDocument($documentId);
-        return Yii::$app->response->redirect(["admin/documents/"]);
 
+        return Yii::$app->response->redirect(["admin/documents/"]);
+    }
+    public function actionTest(){
+
+        $test = new AddAdminDocumentService();
+
+        return Yii::$app->response->redirect(["admin/test/"]);
     }
 }

@@ -6,41 +6,9 @@
 use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 
-
 ?>
 
-<div class="content-wrapper">
-    <div class="container-fluid">
-        <div class="card mb-3">
-            <div class="card-header">редактировать Пост</div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-sm-4">
-                        <form action="/admin/edit/" method="post">
-                            <div class="form-group">
-                                <label>Название</label>
-                                <input class="form-control" type="text" value="" name="name">
-                            </div>
-                            <div class="form-group">
-                                <label>Описание</label>
-                                <input class="form-control" type="text" value="" name="description">
-                            </div>
-                            <div class="form-group">
-                                <label>Текст</label>
-                                <textarea class="form-control" rows="3" name="text"></textarea>
-                            </div>
-                            <div class="form-group">
-                                <label>Изображение</label>
-                                <input class="form-control" type="file" name="img">
-                            </div>
-                            <button type="submit" class="btn btn-primary btn-block">Сохранить</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+
 
 
 <div class="container-fluid  dashboard-content">
@@ -87,7 +55,7 @@ use yii\widgets\ActiveForm;
                             'property_number',
                             ['options' => ['class' => 'col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb-3']]
                         )->textInput(
-                            ['placeholder' => $document->property_number]
+                            ['value' => $document->property_number]
                         )->label()
                         ?>
 
@@ -95,7 +63,7 @@ use yii\widgets\ActiveForm;
                             $updateDocumentToBdForm,
                             'street',
                             ['options' => ['class' => 'col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb-3']]
-                        )->textInput(['placeholder' => $document->street])->label
+                        )->textInput(['value' => $document->street])->label
                         (
                             false
                         )
@@ -106,7 +74,7 @@ use yii\widgets\ActiveForm;
                             'town',
                             ['options' => ['class' => 'col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 mb-5']]
                         )->textInput([
-                            'placeholder' =>
+                            'value' =>
                                 $document->town,
                         ])
                             ->label
@@ -120,7 +88,7 @@ use yii\widgets\ActiveForm;
                             $updateDocumentToBdForm,
                             'post_code',
                             ['options' => ['class' => 'col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 mb-5']]
-                        )->textInput(['placeholder' => $document->post_code])
+                        )->textInput(['value' => $document->post_code])
                             ->label
                             (
                                 false
@@ -132,7 +100,7 @@ use yii\widgets\ActiveForm;
                             $updateDocumentToBdForm,
                             'post_code_first_part',
                             ['options' => ['class' => 'col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 mb-5']]
-                        )->textInput(['placeholder' => $document->post_code_first_part])
+                        )->textInput(['value' => $document->post_code_first_part])
                             ->label
                             (
                                 false
@@ -145,7 +113,7 @@ use yii\widgets\ActiveForm;
                             'client',
                             ['options' => ['class' => 'col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb-5']]
                         )->textInput(
-                            ['placeholder' => $document->client]
+                            ['value' => $document->client]
                         )->label()
                         ?>
                     </div>
@@ -159,8 +127,6 @@ use yii\widgets\ActiveForm;
                             [
 
                                 'item' => function ($index, $label, $name, $checked, $value) {
-                                    $return = '<label class="custom-control custom-radio">';
-
                                     $arrayOfSecondTable
                                         = \app\services\documents\GetAllSecondaryInfoOfDocumentsService::getSecondaryInfoPurporse(
                                         Yii::$app->request->get('documentId')
@@ -168,17 +134,32 @@ use yii\widgets\ActiveForm;
                                     if ($arrayOfSecondTable) {
                                         foreach ($arrayOfSecondTable as $id => $tableName) {
                                             if ($tableName === $label) {
+                                                $return = '<label class="custom-control custom-radio">';
                                                 $return .= '<input class="custom-control-input" type="radio" name="'
                                                     .$name
                                                     .'" value="'.$value.'" tabindex="3" checked>';
+                                                $return .= '<span class="custom-control-label">'.ucwords($label)
+                                                    .'</span>';
+                                                $return .= '</label>';
+                                            } else {
+                                                $return = '<label class="custom-control custom-radio">';
+                                                $return .= '<input class="custom-control-input" type="radio" name="'
+                                                    .$name
+                                                    .'" value="'.$value.'" tabindex="3">';
+                                                $return .= '<span class="custom-control-label">'.ucwords($label)
+                                                    .'</span>';
+                                                $return .= '</label>';
                                             }
                                         }
                                     } else {
-                                        $return .= '<input class="custom-control-input" type="radio" name="'.$name
+                                        $return = '<label class="custom-control custom-radio">';
+                                        $return .= '<input class="custom-control-input" type="radio" name="'
+                                            .$name
                                             .'" value="'.$value.'" tabindex="3">';
+                                        $return .= '<span class="custom-control-label">'.ucwords($label).'</span>';
+                                        $return .= '</label>';
                                     }
-                                    $return .= '<span class="custom-control-label">'.ucwords($label).'</span>';
-                                    $return .= '</label>';
+
 
                                     return $return;
                                 },
@@ -195,7 +176,7 @@ use yii\widgets\ActiveForm;
                             'borrower',
                             ['options' => ['class' => 'col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb-3']]
                         )->textInput(
-                            ['placeholder' => $document->borrower]
+                            ['value' => $document->borrower]
                         )->label()
                         ?>
                     </div>
@@ -209,16 +190,23 @@ use yii\widgets\ActiveForm;
                             [
 
                                 'item' => function ($index, $label, $name, $checked, $value) {
-                                    $return = '<label class="custom-control custom-radio">';
                                     $document = \app\models\Documents::find()->where(
                                         ['id' => Yii::$app->request->get('documentId')]
                                     )->one();
                                     if ($document->limited_liability === $index) {
+                                        $return = '<label class="custom-control custom-radio">';
                                         $return .= '<input class="custom-control-input" type="radio" name="'.$name
                                             .'" value="'.$value.'" tabindex="3" checked>';
+                                        $return .= '<span class="custom-control-label">'.ucwords($label).'</span>';
+                                        $return .= '</label>';
+                                    } else {
+                                        $return = '<label class="custom-control custom-radio">';
+                                        $return .= '<input class="custom-control-input" type="radio" name="'.$name
+                                            .'" value="'.$value.'" tabindex="3">';
+                                        $return .= '<span class="custom-control-label">'.ucwords($label).'</span>';
+                                        $return .= '</label>';
                                     }
-                                    $return .= '<span class="custom-control-label">'.ucwords($label).'</span>';
-                                    $return .= '</label>';
+
 
                                     return $return;
                                 },
@@ -238,18 +226,23 @@ use yii\widgets\ActiveForm;
                             [
 
                                 'item' => function ($index, $label, $name, $checked, $value) {
-                                    $return = '<label class="custom-control custom-radio">';
                                     $document = \app\models\Documents::find()->where(
                                         ['id' => Yii::$app->request->get('documentId')]
                                     )->one();
                                     if ($document->same_as_inspection === $index) {
+                                        $return = '<label class="custom-control custom-radio">';
                                         $return .= '<input class="custom-control-input" type="radio" name="'.$name
                                             .'" value="'.$value.'" tabindex="3" checked>';
+                                        $return .= '<span class="custom-control-label">'.ucwords($label).'</span>';
+                                        $return .= '</label>';
+                                    } else {
+                                        $return = '<label class="custom-control custom-radio">';
+                                        $return .= '<input class="custom-control-input" type="radio" name="'.$name
+                                            .'" value="'.$value.'" tabindex="3">';
+                                        $return .= '<span class="custom-control-label">'.ucwords($label).'</span>';
+                                        $return .= '</label>';
                                     }
 
-
-                                    $return .= '<span class="custom-control-label">'.ucwords($label).'</span>';
-                                    $return .= '</label>';
 
                                     return $return;
                                 },
@@ -292,7 +285,7 @@ use yii\widgets\ActiveForm;
                             'cj_ref',
                             ['options' => ['class' => 'col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 mb-3']]
                         )->textInput(
-                            ['placeholder' => $document->cj_ref]
+                            ['value' => $document->cj_ref]
                         )->label()
                         ?>
 
@@ -301,7 +294,7 @@ use yii\widgets\ActiveForm;
                             'client_ref',
                             ['options' => ['class' => 'col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 mb-3']]
                         )->textInput(
-                            ['placeholder' => $document->client_ref]
+                            ['value' => $document->client_ref]
                         )->label()
                         ?>
                     </div>
@@ -311,7 +304,7 @@ use yii\widgets\ActiveForm;
                             'valuer',
                             ['options' => ['class' => 'col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb-3']]
                         )->textInput(
-                            ['placeholder' => $document->valuer]
+                            ['value' => $document->valuer]
                         )->label()
                         ?>
                     </div>
@@ -325,17 +318,23 @@ use yii\widgets\ActiveForm;
                             [
 
                                 'item' => function ($index, $label, $name, $checked, $value) {
-                                    $return = '<label class="custom-control custom-radio">';
                                     $document = \app\models\Documents::find()->where(
                                         ['id' => Yii::$app->request->get('documentId')]
                                     )->one();
                                     if ($document->double_signed === $index) {
+                                        $return = '<label class="custom-control custom-radio">';
                                         $return .= '<input class="custom-control-input" type="radio" name="'.$name
                                             .'" value="'.$value.'" tabindex="3" checked>';
+                                        $return .= '<span class="custom-control-label">'.ucwords($label).'</span>';
+                                        $return .= '</label>';
+                                    } else {
+                                        $return = '<label class="custom-control custom-radio">';
+                                        $return .= '<input class="custom-control-input" type="radio" name="'.$name
+                                            .'" value="'.$value.'" tabindex="3">';
+                                        $return .= '<span class="custom-control-label">'.ucwords($label).'</span>';
+                                        $return .= '</label>';
                                     }
 
-                                    $return .= '<span class="custom-control-label">'.ucwords($label).'</span>';
-                                    $return .= '</label>';
 
                                     return $return;
                                 },
@@ -351,7 +350,7 @@ use yii\widgets\ActiveForm;
                             'valuer_2',
                             ['options' => ['class' => 'col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb-3']]
                         )->textInput(
-                            ['placeholder' => $document->valuer_2]
+                            ['value' => $document->valuer_2]
                         )->label()
                         ?>
                     </div>
@@ -365,7 +364,6 @@ use yii\widgets\ActiveForm;
                             [
 
                                 'item' => function ($index, $label, $name, $checked, $value) {
-                                    $return = '<label class="custom-control custom-radio">';
                                     $arrayOfSecondTable
                                         = \app\services\documents\GetAllSecondaryInfoOfDocumentsService::getSecondaryInfoTenure(
                                         Yii::$app->request->get('documentId')
@@ -373,20 +371,13 @@ use yii\widgets\ActiveForm;
                                     if ($arrayOfSecondTable) {
                                         foreach ($arrayOfSecondTable as $id => $tableName) {
                                             if ($tableName === $label) {
-                                                $return .= '<input class="custom-control-input" type="radio" name="'
-                                                    .$name
-                                                    .'" value="'.$value.'" tabindex="3" checked>';
+                                                $checked = 'checked';
+
                                             }
                                         }
-                                    } else {
-                                        $return .= '<input class="custom-control-input" type="radio" name="'.$name
-                                            .'" value="'.$value.'" tabindex="3">';
                                     }
 
-                                    $return .= '<span class="custom-control-label">'.ucwords($label).'</span>';
-                                    $return .= '</label>';
-
-                                    return $return;
+                                    return "<label class='custom-control custom-checkbox'><input class='custom-control-input' type='checkbox' {$checked} name='{$name}' value='{$value}' tabindex='3'><span class='custom-control-label'>{$label}</span></label>";
                                 },
 
                             ]
@@ -421,8 +412,6 @@ use yii\widgets\ActiveForm;
                                 'class' => 'col-xl-12 col-lg-4 col-md-4 col-sm-4 col-4 mb-5',
 
                                 'item' => function ($index, $label, $name, $checked, $value) {
-                                    $return = '<label class="custom-control custom-checkbox">';
-
                                     $arrayOfSecondTable
                                         = \app\services\documents\GetAllSecondaryInfoOfDocumentsService::getSecondaryInfoBasis(
                                         Yii::$app->request->get('documentId')
@@ -430,21 +419,13 @@ use yii\widgets\ActiveForm;
                                     if ($arrayOfSecondTable) {
                                         foreach ($arrayOfSecondTable as $id => $tableName) {
                                             if ($tableName === $label) {
-                                                $return .= '<input class="custom-control-input" type="checkbox" name="'
-                                                    .$name.
-                                                    '" value="'.$value.'" tabindex="3" checked>';
+                                                $checked = 'checked';
+
                                             }
                                         }
-                                    } else {
-                                        $return .= '<input class="custom-control-input" type="checkbox" name="'.$name.
-                                            '" value="'.$value.'" tabindex="3">';
                                     }
 
-                                    $return .= '<span class="custom-control-label">'.ucwords($label).'</span>';
-                                    $return .= '</label>';
-
-
-                                    return $return;
+                                    return "<label class='custom-control custom-checkbox'><input class='custom-control-input' type='checkbox' {$checked} name='{$name}' value='{$value}' tabindex='3'><span class='custom-control-label'>{$label}</span></label>";
                                 },
 
                             ]
@@ -470,29 +451,22 @@ use yii\widgets\ActiveForm;
                                 'class' => 'col-xl-12 col-lg-4 col-md-4 col-sm-4 col-4 mb-5',
 
                                 'item' => function ($index, $label, $name, $checked, $value) {
-                                    $return = '<label class="custom-control custom-checkbox">';
 
                                     $arrayOfSecondTable
                                         = \app\services\documents\GetAllSecondaryInfoOfDocumentsService::getSecondaryInfoBasis(
                                         Yii::$app->request->get('documentId')
                                     );
+
                                     if ($arrayOfSecondTable) {
                                         foreach ($arrayOfSecondTable as $id => $tableName) {
                                             if ($tableName === $label) {
-                                                $return .= '<input class="custom-control-input" type="checkbox" name="'
-                                                    .$name.
-                                                    '" value="'.$value.'" tabindex="3" checked>';
+                                                $checked = 'checked';
+
                                             }
                                         }
-                                    } else {
-                                        $return .= '<input class="custom-control-input" type="checkbox" name="'.$name.
-                                            '" value="'.$value.'" tabindex="3">';
                                     }
-                                    $return .= '<span class="custom-control-label">'.ucwords($label).'</span>';
-                                    $return .= '</label>';
 
-
-                                    return $return;
+                                    return "<label class='custom-control custom-checkbox'><input class='custom-control-input' type='checkbox' {$checked} name='{$name}' value='{$value}' tabindex='3'><span class='custom-control-label'>{$label}</span></label>";
                                 },
 
                             ]
@@ -520,7 +494,6 @@ use yii\widgets\ActiveForm;
                             ),
                             [
                                 'item' => function ($index, $label, $name, $checked, $value) {
-                                    $return = '<label class="custom-control custom-checkbox">';
                                     $arrayOfSecondTable = \app\services\documents\GetAllSecondaryInfoOfDocumentsService
                                         ::getSecondaryInfoSector(
                                             Yii::$app->request->get('documentId')
@@ -528,21 +501,13 @@ use yii\widgets\ActiveForm;
                                     if ($arrayOfSecondTable) {
                                         foreach ($arrayOfSecondTable as $id => $tableName) {
                                             if ($tableName === $label) {
-                                                $return .= '<input class="custom-control-input" type="checkbox" name="'
-                                                    .$name.
-                                                    '" value="'.$value.'" tabindex="3" checked>';
+                                                $checked = 'checked';
+
                                             }
                                         }
-                                    } else {
-                                        $return .= '<input class="custom-control-input" type="checkbox" name="'.$name.
-                                            '" value="'.$value.'" tabindex="3">';
                                     }
 
-                                    $return .= '<span class="custom-control-label">'.ucwords($label).'</span>';
-                                    $return .= '</label>';
-
-
-                                    return $return;
+                                    return "<label class='custom-control custom-checkbox'><input class='custom-control-input' type='checkbox' {$checked} name='{$name}' value='{$value}' tabindex='3'><span class='custom-control-label'>{$label}</span></label>";
                                 },
 
                             ]
@@ -564,8 +529,6 @@ use yii\widgets\ActiveForm;
                             [
 
                                 'item' => function ($index, $label, $name, $checked, $value) {
-                                    $return = '<label class="custom-control custom-checkbox">';
-
                                     $arrayOfSecondTable = \app\services\documents\GetAllSecondaryInfoOfDocumentsService
                                         ::getSecondaryInfoSector(
                                             Yii::$app->request->get('documentId')
@@ -573,20 +536,13 @@ use yii\widgets\ActiveForm;
                                     if ($arrayOfSecondTable) {
                                         foreach ($arrayOfSecondTable as $id => $tableName) {
                                             if ($tableName === $label) {
-                                                $return .= '<input class="custom-control-input" type="checkbox" name="'
-                                                    .$name.
-                                                    '" value="'.$value.'" tabindex="3" checked>';
+                                                $checked = 'checked';
+
                                             }
                                         }
-                                    } else {
-                                        $return .= '<input class="custom-control-input" type="checkbox" name="'.$name.
-                                            '" value="'.$value.'" tabindex="3">';
                                     }
-                                    $return .= '<span class="custom-control-label">'.ucwords($label).'</span>';
-                                    $return .= '</label>';
 
-
-                                    return $return;
+                                    return "<label class='custom-control custom-checkbox'><input class='custom-control-input' type='checkbox' {$checked} name='{$name}' value='{$value}' tabindex='3'><span class='custom-control-label'>{$label}</span></label>";
                                 },
 
                             ]
@@ -617,7 +573,6 @@ use yii\widgets\ActiveForm;
 
 
                                 'item' => function ($index, $label, $name, $checked, $value) {
-                                    $return = '<label class="custom-control custom-checkbox">';
                                     $arrayOfSecondTable = \app\services\documents\GetAllSecondaryInfoOfDocumentsService
                                         ::getSecondaryInfoMethodology(
                                             Yii::$app->request->get('documentId')
@@ -625,21 +580,13 @@ use yii\widgets\ActiveForm;
                                     if ($arrayOfSecondTable) {
                                         foreach ($arrayOfSecondTable as $id => $tableName) {
                                             if ($tableName === $label) {
-                                                $return .= '<input class="custom-control-input" type="checkbox" name="'
-                                                    .$name.
-                                                    '" value="'.$value.'" tabindex="3" checked>';
+                                                $checked = 'checked';
+
                                             }
                                         }
-                                    } else {
-                                        $return .= '<input class="custom-control-input" type="checkbox" name="'.$name.
-                                            '" value="'.$value.'" tabindex="3">';
                                     }
 
-                                    $return .= '<span class="custom-control-label">'.ucwords($label).'</span>';
-                                    $return .= '</label>';
-
-
-                                    return $return;
+                                    return "<label class='custom-control custom-checkbox'><input class='custom-control-input' type='checkbox' {$checked} name='{$name}' value='{$value}' tabindex='3'><span class='custom-control-label'>{$label}</span></label>";
                                 },
 
                             ]
@@ -663,7 +610,6 @@ use yii\widgets\ActiveForm;
                             [
 
                                 'item' => function ($index, $label, $name, $checked, $value) {
-                                    $return = '<label class="custom-control custom-checkbox">';
                                     $arrayOfSecondTable = \app\services\documents\GetAllSecondaryInfoOfDocumentsService
                                         ::getSecondaryInfoMethodology(
                                             Yii::$app->request->get('documentId')
@@ -671,20 +617,13 @@ use yii\widgets\ActiveForm;
                                     if ($arrayOfSecondTable) {
                                         foreach ($arrayOfSecondTable as $id => $tableName) {
                                             if ($tableName === $label) {
-                                                $return .= '<input class="custom-control-input" type="checkbox" name="'
-                                                    .$name.
-                                                    '" value="'.$value.'" tabindex="3" checked>';
+                                                $checked = 'checked';
+
                                             }
                                         }
-                                    } else {
-                                        $return .= '<input class="custom-control-input" type="checkbox" name="'.$name.
-                                            '" value="'.$value.'" tabindex="3">';
                                     }
-                                    $return .= '<span class="custom-control-label">'.ucwords($label).'</span>';
-                                    $return .= '</label>';
 
-
-                                    return $return;
+                                    return "<label class='custom-control custom-checkbox'><input class='custom-control-input' type='checkbox' {$checked} name='{$name}' value='{$value}' tabindex='3'><span class='custom-control-label'>{$label}</span></label>";
                                 },
 
                             ]
@@ -715,7 +654,6 @@ use yii\widgets\ActiveForm;
 
 
                                 'item' => function ($index, $label, $name, $checked, $value) {
-                                    $return = '<label class="custom-control custom-checkbox">';
                                     $arrayOfSecondTable = \app\services\documents\GetAllSecondaryInfoOfDocumentsService
                                         ::getSecondaryInfoAppendicies(
                                             Yii::$app->request->get('documentId')
@@ -723,21 +661,13 @@ use yii\widgets\ActiveForm;
                                     if ($arrayOfSecondTable) {
                                         foreach ($arrayOfSecondTable as $id => $tableName) {
                                             if ($tableName === $label) {
-                                                $return .= '<input class="custom-control-input" type="checkbox" name="'
-                                                    .$name.
-                                                    '" value="'.$value.'" tabindex="3" checked>';
+                                                $checked = 'checked';
+
                                             }
                                         }
-                                    } else {
-                                        $return .= '<input class="custom-control-input" type="checkbox" name="'.$name.
-                                            '" value="'.$value.'" tabindex="3">';
                                     }
 
-                                    $return .= '<span class="custom-control-label">'.ucwords($label).'</span>';
-                                    $return .= '</label>';
-
-
-                                    return $return;
+                                    return "<label class='custom-control custom-checkbox'><input class='custom-control-input' type='checkbox' {$checked} name='{$name}' value='{$value}' tabindex='3'><span class='custom-control-label'>{$label}</span></label>";
                                 },
 
                             ]
@@ -762,7 +692,6 @@ use yii\widgets\ActiveForm;
                             [
 
                                 'item' => function ($index, $label, $name, $checked, $value) {
-                                    $return = '<label class="custom-control custom-checkbox">';
                                     $arrayOfSecondTable = \app\services\documents\GetAllSecondaryInfoOfDocumentsService
                                         ::getSecondaryInfoAppendicies(
                                             Yii::$app->request->get('documentId')
@@ -770,20 +699,13 @@ use yii\widgets\ActiveForm;
                                     if ($arrayOfSecondTable) {
                                         foreach ($arrayOfSecondTable as $id => $tableName) {
                                             if ($tableName === $label) {
-                                                $return .= '<input class="custom-control-input" type="checkbox" name="'
-                                                    .$name.
-                                                    '" value="'.$value.'" tabindex="3" checked>';
+                                                $checked = 'checked';
+
                                             }
                                         }
-                                    } else {
-                                        $return .= '<input class="custom-control-input" type="checkbox" name="'.$name.
-                                            '" value="'.$value.'" tabindex="3">';
                                     }
-                                    $return .= '<span class="custom-control-label">'.ucwords($label).'</span>';
-                                    $return .= '</label>';
 
-
-                                    return $return;
+                                    return "<label class='custom-control custom-checkbox'><input class='custom-control-input' type='checkbox' {$checked} name='{$name}' value='{$value}' tabindex='3'><span class='custom-control-label'>{$label}</span></label>";
                                 },
 
                             ]
@@ -810,14 +732,11 @@ use yii\widgets\ActiveForm;
                         $document->id
                     );
                     foreach ($files as $file):?>
-                    <img src="<?=Url::to('/'.$file->path)?>" width="300px" height="300px" alt="Изображения загруженные при добавлении документа">
+                        <img src="<?= Url::to('/'.$file->path) ?>" width="300px" height="300px"
+                             alt="Изображения загруженные при добавлении документа">
 
-                    <?php endforeach; ?>
-
-
-
-
-
+                    <?php
+                    endforeach; ?>
 
 
                     <!--                    <form action="/admin/add" method="post">-->
@@ -1149,5 +1068,14 @@ use yii\widgets\ActiveForm;
         <!-- ============================================================== -->
     </div>
 
+    <label class="custom-control custom-checkbox">
+        <input class="custom-control-input" type="checkbox"
+               name="AddDocumentToBdForm[basis_of_value_ids][]" value="4" tabindex="3">
 
+        <span class="custom-control-label">Market Value (special assumption 180 days)</span>
+    </label>
+    <label class="custom-control custom-checkbox">
+        <input class="custom-control-input" type="checkbox" name="AddDocumentToBdForm[basis_of_value_ids_right][]" value="7" tabindex="3">
+        <span class="custom-control-label">Market Value (3)</span>
+    </label>
 </div>
