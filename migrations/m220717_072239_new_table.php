@@ -12,29 +12,28 @@ class m220717_072239_new_table extends Migration
      */
     public function safeUp()
     {
-        $this->createTable('files', [
+        $this->createTable('docx', [
             'id'             => $this->primaryKey(),
-            'name'   => $this->string('255')->notNull(),
             'path' => $this->string('255')->notNull(),
 
         ]);
 
-        $this->createTable('documents_files', [
+        $this->createTable('documents_docx', [
             'id'             => $this->primaryKey(),
             'documents_id'   => $this->integer()->notNull(),
-            'files_id' => $this->integer()->notNull(),
+            'docx_id' => $this->integer()->notNull(),
 
         ]);
         $this->addForeignKey(
-            'documents_files_files',
-            'documents_files',
-            'files_id',
-            'files',
+            'documents_docx',
+            'documents_docx',
+            'docx_id',
+            'docx',
             'id'
         );
         $this->addForeignKey(
-            'documents_files_documents',
-            'documents_files',
+            'documents_docx_documents',
+            'documents_docx',
             'documents_id',
             'documents',
             'id'

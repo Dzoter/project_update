@@ -34,7 +34,8 @@ class AdminAsset extends AssetBundle
             'assets/vendor/charts/morris-bundle/morris.css',
             'assets/vendor/fonts/material-design-iconic-font/css/materialdesignicons.min.css',
             'assets/vendor/charts/c3charts/c3.css',
-            'assets/vendor/fonts/flag-icon-css/flag-icon.min.css'
+            'assets/vendor/fonts/flag-icon-css/flag-icon.min.css',
+
         ];
     public $js
         = [

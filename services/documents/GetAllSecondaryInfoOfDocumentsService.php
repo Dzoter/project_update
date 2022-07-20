@@ -5,6 +5,7 @@ namespace app\services\documents;
 use app\models\Appendicies;
 use app\models\BasisOfValue;
 use app\models\Documents;
+use app\models\Docx;
 use app\models\Files;
 use app\models\Methodology;
 use app\models\PurposeOfValuation;
@@ -143,5 +144,27 @@ class GetAllSecondaryInfoOfDocumentsService
         }
         return $secondaryData;
     }
+    public static function getDocx($documentId)
+    {
+        $document = Documents::find()->where(['id' => $documentId])->one();
+        $secondaryData = [];
+        $idsData = [];
+
+        if ($document->documentsDocxes){
+            foreach ($document->documentsDocxes as $secondaryTables => $secondaryTable){
+                $idsData[] = $secondaryTable->docx_id;
+            }
+            foreach ($idsData as $id){
+                $table = Docx::find()->where(['id'=>$id])->one();
+                $secondaryData = $table;
+            }
+
+        }
+        return $secondaryData;
+
+
+        }
+
+
 
 }

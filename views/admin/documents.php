@@ -3,6 +3,8 @@
 
 /** @var object $documents */
 
+use yii\helpers\Html;
+
 ?>
 <div class="content-wrapper">
     <div class="container-fluid">
@@ -86,6 +88,10 @@
         <?php
         else: ?>
         <?php foreach ($documents as $document):?>
+
+            <?php $file = (\app\services\documents\GetAllSecondaryInfoOfDocumentsService::getDocx($document->id));
+            var_dump($file->id)
+            ?>
         <div class="card">
             <div class="card-header">
                 <figcaption class="figure-caption">
@@ -94,9 +100,10 @@
                             <span><i class="fas fa-file-word mr-2"></i></span> .docx
                         </li>
                         <li class="list-inline-item">
-                            <a download="" href="#">
-                                <i class="fas fa-download "></i>
-                            </a>
+                            <?= Html::a('загрузить', ["/admin/download/$file->id"], [
+                                'class' => 'link link--block
+                    link--clip',
+                            ]) ?>
                         </li>
                         <li class="list-inline-item">
                             <a href="/admin/edit/" class="btn btn-reset text-muted" title="More actions">

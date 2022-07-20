@@ -25,7 +25,7 @@ $config = [
             'identityCookie' => ['name' => '_identity', 'httpOnly' => true]
         ],
         'errorHandler' => [
-            'errorAction' => 'site/error',
+            'errorAction' => 'admin/error',
         ],
         'mailer' => [
             'class' => 'yii\swiftmailer\Mailer',
@@ -58,6 +58,8 @@ $config = [
                 'admin/add' => 'admin/add',
                 'admin/edit/<documentId:\d+>' => 'admin/edit',
                 'admin/delete/<documentId:\d+>' => 'admin/delete',
+                'admin/download/<docxId:\d+>' => 'admin/download',
+
 
 
             ],

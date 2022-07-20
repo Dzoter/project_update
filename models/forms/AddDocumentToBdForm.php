@@ -45,12 +45,13 @@ class AddDocumentToBdForm extends Model
     public $methodology_ids_right;
     public $appendicies_ids_right;
     public $files;
+    public $fileName;
 
 
     public function rules()
     {
         return [
-            [['property_number', 'street'], 'required', 'message' => 'поле должно быть заполнено'],
+            [['property_number', 'street'], 'safe', 'message' => 'поле должно быть заполнено'],
             [
                 [
                     'property_number',
@@ -67,6 +68,7 @@ class AddDocumentToBdForm extends Model
                 ],
                 'string',
             ],
+            [['fileName'],'each','rule' => ['string']],
             [
                 ['report_date', 'inspection_date', 'valuation_date'],
                 'date',

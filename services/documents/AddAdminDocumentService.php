@@ -5,13 +5,16 @@ namespace app\services\documents;
 use app\models\Documents;
 use app\models\DocumentsAppendicies;
 use app\models\DocumentsBasisOfValue;
+use app\models\DocumentsDocx;
 use app\models\DocumentsFiles;
 use app\models\DocumentsMethodology;
 use app\models\DocumentsPurposeOfValuation;
 use app\models\DocumentsSectorOverview;
 use app\models\DocumentsTenure;
+use app\models\Docx;
 use app\models\Files;
 use app\models\forms\AddDocumentToBdForm;
+use yii\helpers\Url;
 use yii\web\UploadedFile;
 
 class AddAdminDocumentService
@@ -23,7 +26,8 @@ class AddAdminDocumentService
         } elseif ($params === 'update') {
             $document = Documents::find()->where(['id' => $documentId])->one();
         }
-
+        var_dump($addDocumentToBdForm->fileName);
+        die();
         $document->property_number = $addDocumentToBdForm->property_number;
         $document->street = $addDocumentToBdForm->street;
         $document->town = $addDocumentToBdForm->town;
@@ -43,7 +47,6 @@ class AddAdminDocumentService
         $document->double_signed = $addDocumentToBdForm->double_signed;
         $document->save();
         $documentId = $document->getId();
-
 
 
         if ($addDocumentToBdForm->basis_of_value_ids) {
@@ -126,7 +129,7 @@ class AddAdminDocumentService
         $addDocumentToBdForm->files = UploadedFile::getInstances($addDocumentToBdForm, 'files');
 
 
-        if ($addDocumentToBdForm->files){
+        if ($addDocumentToBdForm->files) {
             if (!mkdir($concurrentDirectory = "uploadedImg/".(string)$documentId) && !is_dir($concurrentDirectory)) {
                 throw new \RuntimeException(sprintf('Directory "%s" was not created', $concurrentDirectory));
             }
@@ -148,6 +151,8 @@ class AddAdminDocumentService
                 $documentsFile->save();
             }
         }
+            $doc = Documents::find()->where(['id'=>$documentId])->one();
+            $this->createDocx($doc);
     }
 
     public function updateDocument($documentId, AddDocumentToBdForm $updateDocumentToBdForm)
@@ -158,6 +163,7 @@ class AddAdminDocumentService
 
     public function deleteSecondaryData($documentId)
     {
+
         $appendicieses = DocumentsAppendicies::find()->where(['documents_id' => $documentId])->all();
         if ($appendicieses) {
             foreach ($appendicieses as $appendiciese) {
@@ -205,10 +211,210 @@ class AddAdminDocumentService
         $document->delete();
     }
 
-    public function createDocx(){
+    public function createDocx( Documents $document)
+    {
+
+        $docx = new \PhpOffice\PhpWord\TemplateProcessor(Url::to('@app/web/uploadDocx/revieww.docx'));
+        $uploadDir = __DIR__;
 
 
 
+        $docx->setValue('property_number', $document->property_number);
+        $docx->setValue('street',$document->street);
+        $docx->setValue('town', $document->town);
+        $docx->setValue('post_code', $document->post_code);
+        $docx->setValue('client', $document->client);
+        $docx->setValue('valuation_date',date("jS F Y",strtotime($document->valuation_date)) );
+        $docx->setValue('cj_ref', $document->cj_ref);
+        $docx->setValue('clinet_ref', $document->client_ref);
+
+
+        $docx->setValue('borrower', $document->borrower);
+        $docx->setValue('tenure', implode('',GetAllSecondaryInfoOfDocumentsService::getSecondaryInfoTenure
+        ($document->id)));
+        $docx->setValue('post_code_first_part', $document->post_code_first_part);
+        $docx->setValue('purpose_of_valuation', GetAllSecondaryInfoOfDocumentsService::getSecondaryInfoPurporse
+        ($document->id));
+        $docx->setValue('valuer', $document->valuer);
+        $docx->setValue('valuer_2', $document->valuer_2);
+        $docx->setValue('inspection_date',date("jS F Y",strtotime($document->inspection_date)) );
+        $docx->setValue('report_date',date("jS F Y",strtotime($document->report_date)) );
+
+        /*EXECUTIVE SUMMARY*/
+
+
+
+        if(implode('',GetAllSecondaryInfoOfDocumentsService::getSecondaryInfoPurporse($document->id)) === 'Loan Security'){
+            $docx->cloneBlock('borrower_exec', 1, true, true);
+            $docx->cloneBlock('suit_for_ls', 1, true, true);
+        }else{
+            $docx->cloneBlock('borrower_exec', 0, true, true);
+            $docx->cloneBlock('suit_for_ls', 0, true, true);
+        }
+
+        /*EXECUTIVE SUMMARY*/
+
+
+        $appendices = GetAllSecondaryInfoOfDocumentsService::getSecondaryInfoAppendicies($document->id);
+        $append_i = 1;
+        $append = array();
+        foreach ($appendices as $value)
+        {
+            $append[] = array('append_id' => $append_i, 'app' => $value);
+            $append_i++;
+        }
+        $docx->cloneBlock('appendices', 0, true, false, $append);
+
+
+
+        /*TENURE*/
+
+        $tenure = implode('',GetAllSecondaryInfoOfDocumentsService::getSecondaryInfoTenure($document->id));
+        if($tenure === 'Freehold'){
+            $docx->cloneBlock('tenure_freehold', 1, true, true);
+            $docx->cloneBlock('tenure_long_leasehold', 0, true, true);
+            $docx->cloneBlock('tenure_leasehold', 0, true, true);
+        }elseif($tenure === 'Long Leasehold'){
+            $docx->cloneBlock('tenure_long_leasehold', 1, true, true);
+            $docx->cloneBlock('tenure_freehold', 0, true, true);
+            $docx->cloneBlock('tenure_leasehold', 0, true, true);
+        }elseif($tenure === 'Leasehold'){
+            $docx->cloneBlock('tenure_leasehold', 1, true, true);
+            $docx->cloneBlock('tenure_freehold', 0, true, true);
+            $docx->cloneBlock('tenure_long_leasehold', 0, true, true);
+        }
+
+        /*TENURE*/
+
+
+        /*Valuation Basis*/
+
+
+        $basisValues = implode(',',GetAllSecondaryInfoOfDocumentsService::getSecondaryInfoBasis($document->id));
+
+
+        $docx->cloneBlock('vb_mar', 1, true, true);
+        $docx->cloneBlock('vb_mar_vac_poss', 1, true, true);
+        $docx->cloneBlock('vb_mar_180', 1, true, true);
+        $docx->cloneBlock('vb_mar_90', 1, true, true);
+        $docx->cloneBlock('vb_mar_1', 1, true, true);
+        $docx->cloneBlock('vb_mar_2', 1, true, true);
+        $docx->cloneBlock('vb_mar_3', 1, true, true);
+        $docx->cloneBlock('vb_mar_gross', 1, true, true);
+        $docx->cloneBlock('vb_mar_eus', 1, true, true);
+        $docx->cloneBlock('vb_mar_aggr', 1, true, true);
+        $docx->cloneBlock('vb_mar_rent', 1, true, true);
+        $docx->cloneBlock('vb_mar_reinst', 1, true, true);
+
+
+        if (!strpos($basisValues, 'Market Value')) {
+            $docx->deleteBlock('vb_mar');
+        }
+
+
+
+
+
+        /*TENURE*/
+
+
+        $docx->cloneBlock('tenure_freehold', 1, true, true);
+        $docx->cloneBlock('tenure_long_leasehold', 1, true, true);
+        $docx->cloneBlock('tenure_leasehold', 1, true, true);
+
+
+        /*TENURE*/
+
+
+
+        /*Sector Overview*/
+
+
+        $sector_overview = GetAllSecondaryInfoOfDocumentsService::getSecondaryInfoSector($document->id);
+        $sector = array();
+        foreach ($sector_overview as $value)
+        {
+            $sector[] = array('sec_val' => $value);
+        }
+        $docx->cloneBlock('sector_overview', 0, true, false, $sector);
+
+
+        /*Sector Overview*/
+
+
+        if(implode(',',GetAllSecondaryInfoOfDocumentsService::getSecondaryInfoPurporse($document->id)) === 'Loan Security'){
+            $docx->cloneBlock('loan_security', 1, true, true);
+        }else{
+            $docx->cloneBlock('loan_security', 0, true, true);
+        }
+
+
+        if($document->limited_liability){
+            $docx->cloneBlock('limited_liability', 1, true, true);
+        }else{
+            $docx->cloneBlock('limited_liability', 0, true, true);
+        }
+
+
+
+        if($document->double_signed){
+            $docx->cloneBlock('no_double', 1, true, true);
+            $docx->cloneBlock('double', 0, true, true);
+        }else{
+            $docx->cloneBlock('no_double', 0, true, true);
+            $docx->cloneBlock('double', 1, true, true);
+        }
+
+
+
+        $appendices_bot = GetAllSecondaryInfoOfDocumentsService::getSecondaryInfoAppendicies($document->id);
+        $append_i_bot = 1;
+        $append_bot = array();
+        foreach ($appendices_bot as $value)
+        {
+            $append_bot[] = array('append_id' => $append_i_bot, 'app' => $value);
+            $append_i_bot++;
+        }
+        $docx->cloneBlock('appendices_bot', 0, true, false, $append);
+
+        if (GetAllSecondaryInfoOfDocumentsService::getSecondaryInfoFiles($document->id)){
+            $photoArr = array();
+            foreach (GetAllSecondaryInfoOfDocumentsService::getSecondaryInfoFiles($document->id) as $id => $value){
+                $photoArr[] = $value;
+            }
+            $countPhoto = count($photoArr);
+            foreach ($photoArr as $photoObj){
+                $docx->setImageValue('file',['path'=>Url::to("@app/web/$photoObj->path"),'width'=>120,'height'=>120]);
+            }
+            $docx->cloneBlock('files', $countPhoto, true, true);
+        }
+
+
+        $outputFille = 'review_full.docx';
+
+        $docx->saveAs($outputFille);
+
+        // файл, который нужно перенести
+        $oldFilePath = Url::to('@app/web/review_full.docx');
+// новый путь этого файла
+        $newFilePath = Url::to("@app/web/uploadDocx/$document->id/review_full.docx");
+
+// Получаем адрес директории нового пути
+        $newFolderPath = pathinfo($newFilePath)["dirname"];
+
+// смотрим, есть ли нужная новая директория или пытаемся её создать
+        if(file_exists($newFolderPath) || mkdir($newFolderPath, 0777, true) || is_dir($newFolderPath))
+        {
+            // перемещаем
+            rename($oldFilePath, $newFilePath);
+        }
+        $newDocx = new Docx();
+        $newDocx->path = "uploadDocx/$document->id/review_full.docx";
+        $newDocx->save();
+        $newDocumentDocx = new DocumentsDocx();
+        $newDocumentDocx->documents_id = $document->id;
+        $newDocumentDocx->docx_id = $newDocx->getId();
+        $newDocumentDocx->save();
 
     }
 }

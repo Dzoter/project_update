@@ -3,18 +3,35 @@
 namespace app\controllers;
 
 use app\models\Documents;
+use app\models\Docx;
 use app\models\forms\AddDocumentToBdForm;
 use app\models\forms\AdminLoginForm;
 use app\services\documents\AddAdminDocumentService;
+
+use app\services\documents\SearchDocumentsService;
 use Yii;
+use yii\data\Pagination;
 use yii\filters\AccessControl;
+use yii\helpers\Url;
+use yii\web\ErrorAction;
 
 
 class AdminController extends \yii\web\Controller
 {
     public $layout = 'admin';
 
-
+    public function actions()
+    {
+        return [
+            'error' => [
+                'class' => 'yii\web\ErrorAction',
+            ],
+            'captcha' => [
+                'class' => 'yii\captcha\CaptchaAction',
+                'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
+            ],
+        ];
+    }
     public function behaviors()
     {
         return [
@@ -24,7 +41,7 @@ class AdminController extends \yii\web\Controller
                 'rules'        => [
                     [
                         'allow'   => true,
-                        'actions' => ['add', 'logout', 'edit', 'documents', 'delete', 'edit','test'],
+                        'actions' => ['add', 'logout', 'edit', 'documents', 'delete', 'edit','error','download'],
                         'roles'   => ['@'],
                     ],
                     [
@@ -68,6 +85,7 @@ class AdminController extends \yii\web\Controller
 
     public function actionAdd()
     {
+
         $addDocumentToBdForm = new AddDocumentToBdForm();
         if (Yii::$app->request->post()) {
             $addDocumentToBdForm->load(Yii::$app->request->post());
@@ -93,7 +111,7 @@ class AdminController extends \yii\web\Controller
                 $addDocument = new AddAdminDocumentService();
                 $addDocument->updateDocument($documentId, $updateDocumentToBdForm);
 
-                return Yii::$app->response->redirect(["admin/documents/"]);
+                return Yii::$app->response->redirect(["admin/documents"]);
             }
         }
 
@@ -133,10 +151,10 @@ class AdminController extends \yii\web\Controller
 
         return Yii::$app->response->redirect(["admin/documents/"]);
     }
-    public function actionTest(){
-
-        $test = new AddAdminDocumentService();
-
-        return Yii::$app->response->redirect(["admin/test/"]);
+    public function actionDownload($docxId)
+    {
+        $file = Docx::find()->where("id = $docxId")->one();
+        Yii::$app->response->sendFile($file->path)->send();
     }
+
 }

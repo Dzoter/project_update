@@ -49,7 +49,7 @@ class Documents extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['property_number', 'street', 'town', 'post_code', 'post_code_first_part', 'client', 'borrower', 'limited_liability', 'same_as_inspection', 'cj_ref', 'client_ref', 'valuer', 'valuer_2', 'double_signed'], 'required'],
+            [['property_number', 'street', 'town', 'post_code', 'post_code_first_part', 'client', 'borrower', 'limited_liability', 'same_as_inspection', 'cj_ref', 'client_ref', 'valuer', 'valuer_2', 'double_signed'], 'safe'],
             [['limited_liability', 'double_signed'], 'integer'],
             [['valuation_date', 'inspection_date', 'report_date'], 'safe'],
             [['property_number', 'street', 'town', 'post_code', 'post_code_first_part', 'client', 'borrower', 'same_as_inspection', 'cj_ref', 'client_ref', 'valuer', 'valuer_2'], 'string', 'max' => 255],
@@ -151,6 +151,15 @@ class Documents extends \yii\db\ActiveRecord
     public function getDocumentsFiles()
     {
         return $this->hasMany(DocumentsFiles::className(), ['documents_id' => 'id']);
+    }
+    /**
+     * Gets query for [[DocumentsDocxes]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getDocumentsDocxes()
+    {
+        return $this->hasMany(DocumentsDocx::className(), ['documents_id' => 'id']);
     }
 
 

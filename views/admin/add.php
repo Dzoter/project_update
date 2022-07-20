@@ -584,14 +584,154 @@ use yii\widgets\ActiveForm;
                             ->label(false)
                         ?>
                     </div>
-                    <div class="row">
+                    <input type="button" value="Add Photo" onmousedown="viewDivOne()">
+                    <div class="row" id="div1" style="display: none">
+                        <?= $form->field($addDocumentToBdForm,'fileName[]')->textInput()->label(false); ?>
+
                         <?= $form->field(
                             $addDocumentToBdForm,
                             'files[]')->fileInput([
                             'multiple' => true,
                         ]) ?>
-
                     </div>
+
+
+
+                    <input type="button" id="btn2" style="display:none;" value="Add Photo" onmousedown="viewDivTwo()">
+                    <div class="row" id="div2" style="display: none">
+                        <?= $form->field($addDocumentToBdForm,'fileName[]')->textInput()->label(false); ?>
+
+                        <?= $form->field(
+                            $addDocumentToBdForm,
+                            'files[]')->fileInput([
+                            'multiple' => true,
+                        ]) ?>
+                    </div>
+
+
+
+                    <input type="button" id="btn3" style="display:none;" value="Add Photo" onmousedown="viewDivThree()">
+                    <div class="row" id="div3" style="display: none">
+                        <?= $form->field($addDocumentToBdForm,'fileName[]')->textInput()->label(false); ?>
+
+                        <?= $form->field(
+                            $addDocumentToBdForm,
+                            'files[]')->fileInput([
+                            'multiple' => true,
+                        ]) ?>
+                    </div>
+
+
+
+                    <input type="button" id="btn4" style="display:none;" value="Add Photo" onmousedown="viewDivFour()">
+                    <div class="row" id="div4" style="display: none">
+                        <?= $form->field($addDocumentToBdForm,'fileName[]')->textInput()->label(false); ?>
+
+                        <?= $form->field(
+                            $addDocumentToBdForm,
+                            'files[]')->fileInput([
+                            'multiple' => true,
+                        ]) ?>
+                    </div>
+
+
+
+                    <input type="button" id="btn5" style="display:none;" value="Add Photo" onmousedown="viewDivFive()">
+                    <div class="row" id="div5" style="display: none">
+                        <?= $form->field($addDocumentToBdForm,'fileName[]')->textInput()->label(false); ?>
+
+                        <?= $form->field(
+                            $addDocumentToBdForm,
+                            'files[]')->fileInput([
+                            'multiple' => true,
+                        ]) ?>
+                    </div>
+
+
+                    <input type="button" id="btn6" style="display:none;" value="Add Photo" onmousedown="viewDivSix()">
+                    <div class="row" id="div6" style="display: none">
+                        <?= $form->field($addDocumentToBdForm,'fileName[]')->textInput()->label(false); ?>
+
+                        <?= $form->field(
+                            $addDocumentToBdForm,
+                            'files[]')->fileInput([
+                            'multiple' => true,
+                        ]) ?>
+                    </div>
+
+
+                    <input type="button" id="btn7" style="display:none;" value="Add Photo" onmousedown="viewDivSeven()">
+                    <div class="row" id="div7" style="display: none">
+                        <?= $form->field($addDocumentToBdForm,'fileName[]')->textInput()->label(false); ?>
+
+                        <?= $form->field(
+                            $addDocumentToBdForm,
+                            'files[]')->fileInput([
+                            'multiple' => true,
+                        ]) ?>
+                    </div>
+
+
+                    <input type="button" id="btn8" style="display:none;" value="Add Photo" onmousedown="viewDivEight()">
+                    <div class="row" id="div8" style="display: none">
+                        <?= $form->field($addDocumentToBdForm,'fileName[]')->textInput()->label(false); ?>
+
+                        <?= $form->field(
+                            $addDocumentToBdForm,
+                            'files[]')->fileInput([
+                            'multiple' => true,
+                        ]) ?>
+                    </div>
+
+
+                    <input type="button" id="btn9" style="display:none;" value="Add Photo" onmousedown="viewDivNine()">
+                    <div class="row" id="div9" style="display: none">
+                        <?= $form->field($addDocumentToBdForm,'fileName[]')->textInput()->label(false); ?>
+
+                        <?= $form->field(
+                            $addDocumentToBdForm,
+                            'files[]')->fileInput([
+                            'multiple' => true,
+                        ]) ?>
+                    </div>
+
+
+                    <input type="button" id="btn10" style="display:none;" value="Add Photo" onmousedown="viewDivTen()">
+                    <div class="row" id="div10" style="display: none">
+                        <?= $form->field($addDocumentToBdForm,'fileName[]')->textInput()->label(false); ?>
+
+                        <?= $form->field(
+                            $addDocumentToBdForm,
+                            'files[]')->fileInput([
+                            'multiple' => true,
+                        ]) ?>
+                    </div>
+
+
+                    <input type="button" id="btn11" style="display:none;" value="Add Photo" onmousedown="viewDivEleven()">
+                    <div class="row" id="div11" style="display: none">
+                        <?= $form->field($addDocumentToBdForm,'fileName[]')->textInput()->label(false); ?>
+
+                        <?= $form->field(
+                            $addDocumentToBdForm,
+                            'files[]')->fileInput([
+                            'multiple' => true,
+                        ]) ?>
+                    </div>
+
+
+                    <input type="button" id="btn12" style="display:none;" value="Add Photo" onmousedown="viewDivTwelve()">
+                    <div class="row" id="div12" style="display: none">
+                        <?= $form->field($addDocumentToBdForm,'fileName[]')->textInput()->label(false); ?>
+
+                        <?= $form->field(
+                            $addDocumentToBdForm,
+                            'files[]')->fileInput([
+                            'multiple' => true,
+                        ]) ?>
+                    </div>
+
+
 
 
                     <?= \yii\helpers\Html::submitButton('SUBMIT FORM', [
@@ -601,6 +741,58 @@ use yii\widgets\ActiveForm;
 
                     <?php
                     ActiveForm::end(); ?>
+
+
+                    <script>
+                        function viewDivOne(){
+                            document.getElementById("div1").style.display = "block";
+                            document.getElementById("btn2").style.display = "block";
+                        }
+                        function viewDivTwo(){
+                            document.getElementById("div2").style.display = "block";
+                            document.getElementById("btn3").style.display = "block";
+
+                        }
+                        function viewDivThree(){
+                            document.getElementById("div3").style.display = "block";
+                            document.getElementById("btn4").style.display = "block";
+                        }
+                        function viewDivFour(){
+                            document.getElementById("div4").style.display = "block";
+                            document.getElementById("btn5").style.display = "block";
+                        }
+                        function viewDivFive(){
+                            document.getElementById("div5").style.display = "block";
+                            document.getElementById("btn6").style.display = "block";
+                        }
+                        function viewDivSix(){
+                            document.getElementById("div6").style.display = "block";
+                            document.getElementById("btn7").style.display = "block";
+                        }
+                        function viewDivSeven(){
+                            document.getElementById("div7").style.display = "block";
+                            document.getElementById("btn8").style.display = "block";
+                        }
+                        function viewDivEight(){
+                            document.getElementById("div8").style.display = "block";
+                            document.getElementById("btn9").style.display = "block";
+                        }
+                        function viewDivNine(){
+                            document.getElementById("div9").style.display = "block";
+                            document.getElementById("btn10").style.display = "block";
+                        }
+                        function viewDivTen(){
+                            document.getElementById("div10").style.display = "block";
+                            document.getElementById("btn11").style.display = "block";
+                        }
+                        function viewDivEleven(){
+                            document.getElementById("div11").style.display = "block";
+                            document.getElementById("btn12").style.display = "block";
+                        }
+                        function viewDivTwelve(){
+                            document.getElementById("div12").style.display = "block";
+                        }
+                    </script>
 
                     <!--                    <hr>-->
                     <!--                    <hr>-->
