@@ -6,14 +6,20 @@ use yii\base\Model;
 
 class AddSectorInfoForm extends Model
 {
-    public $sectorInfo;
-    public $sector_radio;
+    public $sectorInfoCommercial;
+    public $sectorInfoResidential;
+    public $sectorInfoHotels;
+    public $sectorInfoDental;
+    public $sectorInfoCareHomes;
+    public $sectorInfoNurseries;
+
+
 
 
     public function rules(){
         return [
-          [['sectorInfo'],'required','message' => 'area cannot be blank'],
-            [['sector_radio'],'safe']
+          [['sectorInfoCommercial','sectorInfoResidential','sectorInfoHotels','sectorInfoDental','sectorInfoCareHomes','sectorInfoNurseries'],'required','message' => 'area cannot be blank'],
+
 
         ];
     }

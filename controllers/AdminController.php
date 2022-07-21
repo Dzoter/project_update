@@ -119,7 +119,7 @@ class AdminController extends \yii\web\Controller
 
     public function actionEdit($documentId)
     {
-        var_dump(Yii::$app->request->post());
+
         $document = Documents::find()->where(['id' => $documentId])->one();
         $renameForm = new RefactorImgForm();
         $updateDocumentToBdForm = new AddDocumentToBdForm();
