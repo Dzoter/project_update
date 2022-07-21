@@ -66,7 +66,9 @@ AdminAsset::register($this);
                             fa-plus-square"></i>Add document <span class="badge badge-success">6</span></a>
                         </li>
                         <li class="nav-item ">
-                            <a class="nav-link active" href="index.html"><i class="far fa-plus-square"></i>Sector overview <span class="badge badge-success">6</span></a>
+                            <a class="nav-link active" href="<?=\yii\helpers\Url::to(['admin/sector'])?>"><i class="far
+                            fa-plus-square"></i>Sector overview
+                                <span class="badge badge-success">6</span></a>
                         </li>
                         <li class="nav-item ">
                             <a class="nav-link active" href="<?=\yii\helpers\Url::to(['admin/logout'])?>"><i class="fas

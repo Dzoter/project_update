@@ -11,6 +11,7 @@ use Yii;
  * @property string $name
  *
  * @property DocumentsSectorOverview[] $documentsSectorOverviews
+ * @property string                    $info
  */
 class SectorOverview extends \yii\db\ActiveRecord
 {
@@ -30,6 +31,7 @@ class SectorOverview extends \yii\db\ActiveRecord
         return [
             [['name'], 'required'],
             [['name'], 'string', 'max' => 64],
+            [['info'], 'string']
         ];
     }
 
@@ -41,6 +43,7 @@ class SectorOverview extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'name' => 'Name',
+            'info' => 'Info'
         ];
     }
 

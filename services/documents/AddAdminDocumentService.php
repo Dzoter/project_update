@@ -14,6 +14,7 @@ use app\models\DocumentsTenure;
 use app\models\Docx;
 use app\models\Files;
 use app\models\forms\AddDocumentToBdForm;
+use app\models\SectorOverview;
 use yii\helpers\Url;
 use yii\web\UploadedFile;
 
@@ -26,8 +27,7 @@ class AddAdminDocumentService
         } elseif ($params === 'update') {
             $document = Documents::find()->where(['id' => $documentId])->one();
         }
-        var_dump($addDocumentToBdForm->fileName);
-        die();
+
         $document->property_number = $addDocumentToBdForm->property_number;
         $document->street = $addDocumentToBdForm->street;
         $document->town = $addDocumentToBdForm->town;
@@ -133,16 +133,28 @@ class AddAdminDocumentService
             if (!mkdir($concurrentDirectory = "uploadedImg/".(string)$documentId) && !is_dir($concurrentDirectory)) {
                 throw new \RuntimeException(sprintf('Directory "%s" was not created', $concurrentDirectory));
             }
+
+
             $path = "uploadedImg/"."$documentId/";
+            $fileIteration = 0;
             foreach ($addDocumentToBdForm->files as $file) {
-                $fileName = $file->baseName.'.'.$file->extension;
+
+
+                if ($addDocumentToBdForm->fileName[$fileIteration]){
+                    $ImgFileName = $addDocumentToBdForm->fileName[$fileIteration].'.'.$file->extension;
+                    ++$fileIteration;
+                } else {
+                    $ImgFileName = $file->name.'.'.$file->extension;
+
+                }
+
 
                 $file->saveAs(
-                    $path.$fileName
+                    $path.$ImgFileName
                 );
                 $newFile = new Files();
-                $newFile->path = (string)$path.(string)$fileName;
-                $newFile->name = (string)$fileName;
+                $newFile->path = (string)$path.(string)$ImgFileName;
+                $newFile->name = (string)$ImgFileName;
                 $newFile->save();
 
                 $documentsFile = new DocumentsFiles();
@@ -150,15 +162,25 @@ class AddAdminDocumentService
                 $documentsFile->documents_id = $documentId;
                 $documentsFile->save();
             }
+
         }
+            if (file_exists(Url::to("@app/web/uploadDocx/$documentId/review_full.docx"))){
+                unlink(Url::to("@app/web/uploadDocx/$documentId/review_full.docx"));
+            }
             $doc = Documents::find()->where(['id'=>$documentId])->one();
             $this->createDocx($doc);
+            return $documentId;
     }
+
+
 
     public function updateDocument($documentId, AddDocumentToBdForm $updateDocumentToBdForm)
     {
+        $this->deleteDocxFile($documentId);
         $this->deleteSecondaryData($documentId);
-        $this->addDocument($updateDocumentToBdForm, 'update', $documentId);
+        $documentId = $this->addDocument($updateDocumentToBdForm, 'update', $documentId);
+        $document = Documents::find()->where(['id'=>$documentId])->one();
+        $this->updateDocx($document);
     }
 
     public function deleteSecondaryData($documentId)
@@ -214,7 +236,7 @@ class AddAdminDocumentService
     public function createDocx( Documents $document)
     {
 
-        $docx = new \PhpOffice\PhpWord\TemplateProcessor(Url::to('@app/web/uploadDocx/revieww.docx'));
+        $docx = new \PhpOffice\PhpWord\TemplateProcessor(Url::to('@app/web/uploadDocx/reviews.docx'));
         $uploadDir = __DIR__;
 
 
@@ -332,11 +354,19 @@ class AddAdminDocumentService
 
         $sector_overview = GetAllSecondaryInfoOfDocumentsService::getSecondaryInfoSector($document->id);
         $sector = array();
-        foreach ($sector_overview as $value)
-        {
-            $sector[] = array('sec_val' => $value);
+        if ($sector_overview){
+            foreach ($sector_overview as $value)
+            {
+                $sectorInfo = SectorOverview::find()->where(['name']===$value)->one();
+                $sector[] = array('sec_val' => $sectorInfo->info);
+            }
+
+            $docx->cloneBlock('sector_overview', 1, true, false, $sector);
+        } else {
+            $docx->cloneBlock('sector_overview', 0, true, false, $sector);
         }
-        $docx->cloneBlock('sector_overview', 0, true, false, $sector);
+
+
 
 
         /*Sector Overview*/
@@ -377,17 +407,82 @@ class AddAdminDocumentService
         }
         $docx->cloneBlock('appendices_bot', 0, true, false, $append);
 
+
+
+        $vanilArray = array(0,1,2,3,4,5,6,7,8,9);
         if (GetAllSecondaryInfoOfDocumentsService::getSecondaryInfoFiles($document->id)){
             $photoArr = array();
             foreach (GetAllSecondaryInfoOfDocumentsService::getSecondaryInfoFiles($document->id) as $id => $value){
                 $photoArr[] = $value;
             }
-            $countPhoto = count($photoArr);
+
+
+            $fileNumber = 1;
+
+            $fileNumberLeftSide = 0;
+            $fileNumberRightSide = 0;
+            $arrayOfDockNumbersLeft = array();
+            $arrayOfDockNumbersRight = array();
+
+
+
             foreach ($photoArr as $photoObj){
-                $docx->setImageValue('file',['path'=>Url::to("@app/web/$photoObj->path"),'width'=>120,'height'=>120]);
+
+                if (!(($fileNumber%2)===0)){
+
+                    $docx->setValue("files_name_left_$fileNumberLeftSide",$photoObj->name);
+                    $docx->setImageValue("files_path_left_$fileNumberLeftSide",['path'=>Url::to("@app/web/$photoObj->path"),'width'=>'500',
+                                                                  'height'=>'200']);
+
+                    $docx->cloneBlock("files_left_$fileNumberLeftSide",1, true, false);
+                    $arrayOfDockNumbersLeft[] = $fileNumberLeftSide;
+
+                    $test = $fileNumberLeftSide;
+                    ++$fileNumberLeftSide;
+                } else{
+                    $docx->setValue("files_name_right_$fileNumberRightSide",$photoObj->name);
+
+
+                    $docx->setImageValue("files_path_right_$fileNumberRightSide",['path'=>Url::to("@app/web/$photoObj->path"),'width'=>'500',
+                                                                  'height'=>'200']);
+
+                    $arrayOfDockNumbersRight[] = $fileNumberRightSide;
+                    ++$fileNumberRightSide;
+                }
+
+                ++$fileNumber;
+
             }
-            $docx->cloneBlock('files', $countPhoto, true, true);
+            $docx->setValue("files_name_right_$test",'photo may be here');
+            $docx->setValue("files_path_right_$test",'');
+
+            $resultArrayLeft = array_diff($vanilArray,$arrayOfDockNumbersLeft);
+//            $resultArrayRight = array_diff($vanilArray,$arrayOfDockNumbersRight);
+
+
+            foreach ($resultArrayLeft as $number){
+                $docx->cloneBlock("files_left_$number", 0, true, true);
+
+            }
+//            foreach ($resultArrayRight as $number){
+//
+//                $docx->cloneBlock("files_right_$number", 0, true, false);
+//
+//            }
+
+        } else {
+                foreach ($vanilArray as $number){
+                    $docx->cloneBlock("files_left_$number", 0);
+
+                }
+
         }
+
+
+
+
+
+
 
 
         $outputFille = 'review_full.docx';
@@ -416,5 +511,16 @@ class AddAdminDocumentService
         $newDocumentDocx->docx_id = $newDocx->getId();
         $newDocumentDocx->save();
 
+    }
+
+    public function deleteDocxFile($documentId){
+
+        $documentDocx = DocumentsDocx::find()->where(['documents_id'=>$documentId])->one();
+        $docx = Docx::find()->where(['id'=>$documentDocx->docx_id])->one();
+        return unlink(Url::to("@app/web/$docx->path"));
+    }
+    public function updateDocx(Documents $documents){
+        $this->deleteDocxFile($documents->id);
+        $this->createDocx($documents);
     }
 }

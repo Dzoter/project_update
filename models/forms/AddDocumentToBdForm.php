@@ -79,7 +79,7 @@ class AddDocumentToBdForm extends Model
                 ['files'],
                 'file',
                 'maxSize'  => 1024 * 1024 * 0.5,
-                'maxFiles' => 4,
+                'maxFiles' => 20,
                 'tooBig'   => 'файл слишком большой',
             ],
             [

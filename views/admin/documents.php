@@ -6,56 +6,7 @@
 use yii\helpers\Html;
 
 ?>
-<div class="content-wrapper">
-    <div class="container-fluid">
-        <div class="card mb-3">
-            <div class="card-header">Посты</div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-sm-4">
-                        <?php
-                        if (!$documents): ?>
-                            <p>Список постов пуст</p>
-                        <?php
-                        else: ?>
 
-                            <table class="table">
-                                <tr>
-                                    <th>Название</th>
-                                    <th>Редактировать</th>
-                                    <th>Удалить</th>
-                                </tr>
-
-                            <?php foreach ($documents as $document):?>
-                                <tr>
-                                    <td><?=$document->id?></td>
-                                    <td><a href="<?=\yii\helpers\Url::to(["admin/edit/$document->id"])?>" class="btn
-                                    btn-primary">Редактировать</a></td>
-                                    <td><a href="<?=\yii\helpers\Url::to(["admin/delete/$document->id"])?>" class="btn
-                                    btn-danger">Удалить</a></td>
-                                </tr>
-
-
-                        <?php endforeach?>
-                            </table>
-                            <?= \yii\widgets\LinkPager::widget([
-                                'pagination' => $pages,
-
-
-
-
-
-
-
-                            ]) ?>
-                        <?php
-                        endif; ?>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
 <div class="container-fluid dashboard-content ">
     <!-- ============================================================== -->
@@ -70,7 +21,8 @@ use yii\helpers\Html;
                 <div class="page-breadcrumb">
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="#" class="breadcrumb-link">Dashboard</a></li>
+                            <li class="breadcrumb-item"><a href="<?= \yii\helpers\Url::to(["admin/documents/"])?>"
+                                                           class="breadcrumb-link">Dashboard</a></li>
                             <li class="breadcrumb-item active" aria-current="page">Documents</li>
                         </ol>
                     </nav>
@@ -90,7 +42,7 @@ use yii\helpers\Html;
         <?php foreach ($documents as $document):?>
 
             <?php $file = (\app\services\documents\GetAllSecondaryInfoOfDocumentsService::getDocx($document->id));
-            var_dump($file->id)
+
             ?>
         <div class="card">
             <div class="card-header">
@@ -99,19 +51,22 @@ use yii\helpers\Html;
                         <li class="list-inline-item text-truncate mr-auto">
                             <span><i class="fas fa-file-word mr-2"></i></span> .docx
                         </li>
+
                         <li class="list-inline-item">
-                            <?= Html::a('загрузить', ["/admin/download/$file->id"], [
-                                'class' => 'link link--block
-                    link--clip',
-                            ]) ?>
+                            <a download="" href="<?= \yii\helpers\Url::to(["admin/download/$file->id"])?>">
+                                <i class="fas fa-download "></i>
+                            </a>
                         </li>
                         <li class="list-inline-item">
-                            <a href="/admin/edit/" class="btn btn-reset text-muted" title="More actions">
+                            <a href="<?= \yii\helpers\Url::to(["admin/edit/$document->id"])?>" class="btn btn-reset
+                            text-muted"
+                               title="More
+                            actions">
                                 <i class="far fa-edit "></i>
                             </a>
                         </li>
                         <li class="list-inline-item">
-                            <a href="/admin/delete/" class="btn btn-reset text-muted" title="More actions">
+                            <a href="<?=\yii\helpers\Url::to(["admin/delete/$document->id"])?>" class="btn btn-reset text-muted" title="More actions">
                                 <i class="far fa-trash-alt"></i>
                             </a>
                         </li>
@@ -120,7 +75,7 @@ use yii\helpers\Html;
             </div>
             <div class="card-body">
                 <blockquote class="blockquote mb-0">
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>
+                    <p><?=$file->id?></p>
                     <footer class="blockquote-footer">Someone famous in
                         <cite title="Source Title">Source Title</cite>
                     </footer>

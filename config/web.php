@@ -59,6 +59,8 @@ $config = [
                 'admin/edit/<documentId:\d+>' => 'admin/edit',
                 'admin/delete/<documentId:\d+>' => 'admin/delete',
                 'admin/download/<docxId:\d+>' => 'admin/download',
+                'admin/remove/<imgId:\d+>/<docId:\d+>' => 'admin/remove',
+                'admin/rename/<imgId:\d+>/<docId:\d+>' => 'admin/rename',
 
 
 

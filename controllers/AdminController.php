@@ -4,16 +4,21 @@ namespace app\controllers;
 
 use app\models\Documents;
 use app\models\Docx;
+use app\models\forms\AddAnotherImgForm;
 use app\models\forms\AddDocumentToBdForm;
+use app\models\forms\AddNewImageForm;
+use app\models\forms\AddSectorInfoForm;
 use app\models\forms\AdminLoginForm;
+use app\models\forms\RefactorImgForm;
 use app\services\documents\AddAdminDocumentService;
-
+use app\services\documents\AddSectorInfoService;
+use app\services\documents\ImgService;
 use app\services\documents\SearchDocumentsService;
 use Yii;
 use yii\data\Pagination;
 use yii\filters\AccessControl;
 use yii\helpers\Url;
-use yii\web\ErrorAction;
+use yii\web\UploadedFile;
 
 
 class AdminController extends \yii\web\Controller
@@ -23,15 +28,16 @@ class AdminController extends \yii\web\Controller
     public function actions()
     {
         return [
-            'error' => [
+            'error'   => [
                 'class' => 'yii\web\ErrorAction',
             ],
             'captcha' => [
-                'class' => 'yii\captcha\CaptchaAction',
+                'class'           => 'yii\captcha\CaptchaAction',
                 'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
             ],
         ];
     }
+
     public function behaviors()
     {
         return [
@@ -41,7 +47,19 @@ class AdminController extends \yii\web\Controller
                 'rules'        => [
                     [
                         'allow'   => true,
-                        'actions' => ['add', 'logout', 'edit', 'documents', 'delete', 'edit','error','download'],
+                        'actions' => [
+                            'add',
+                            'logout',
+                            'edit',
+                            'documents',
+                            'delete',
+                            'edit',
+                            'error',
+                            'download',
+                            'sector',
+                            'remove',
+                            'rename',
+                        ],
                         'roles'   => ['@'],
                     ],
                     [
@@ -85,7 +103,6 @@ class AdminController extends \yii\web\Controller
 
     public function actionAdd()
     {
-
         $addDocumentToBdForm = new AddDocumentToBdForm();
         if (Yii::$app->request->post()) {
             $addDocumentToBdForm->load(Yii::$app->request->post());
@@ -102,25 +119,57 @@ class AdminController extends \yii\web\Controller
 
     public function actionEdit($documentId)
     {
+        var_dump(Yii::$app->request->post());
         $document = Documents::find()->where(['id' => $documentId])->one();
-
+        $renameForm = new RefactorImgForm();
         $updateDocumentToBdForm = new AddDocumentToBdForm();
-        if (Yii::$app->request->post()) {
+        $addAnotherImgForm = new AddAnotherImgForm();
+        $addNewImgForm = new AddNewImageForm();
+        if (Yii::$app->request->post('AddDocumentToBdForm')) {
             $updateDocumentToBdForm->load(Yii::$app->request->post());
             if ($updateDocumentToBdForm->validate()) {
                 $addDocument = new AddAdminDocumentService();
                 $addDocument->updateDocument($documentId, $updateDocumentToBdForm);
-
                 return Yii::$app->response->redirect(["admin/documents"]);
+            }
+        } elseif (Yii::$app->request->post('RefactorImgForm')) {
+            $renameForm->load(Yii::$app->request->post());
+            if ($renameForm->validate()) {
+                $addDocument = new AddAdminDocumentService();
+                $imiService = new ImgService();
+                $imiService->refactorImg($renameForm);
+                $addDocument->updateDocx($document);
+                return Yii::$app->response->redirect(["admin/edit/$documentId"]);
+            }
+
+        } elseif (Yii::$app->request->post('AddAnotherImgForm')){
+            $addAnotherImgForm->load(Yii::$app->request->post());
+            if ($addAnotherImgForm->validate()){
+                $addDocument = new AddAdminDocumentService();
+                $imiService = new ImgService();
+                $imiService->addAnotherImg($addAnotherImgForm);
+                $addDocument->updateDocx($document);
+            }
+        } elseif (Yii::$app->request->post('AddNewImageForm')){
+            $addNewImgForm->load(Yii::$app->request->post());
+            if ($addNewImgForm->validate()){
+                $addDocument = new AddAdminDocumentService();
+                $imiService = new ImgService();
+                $imiService->addNewImg($addNewImgForm);
+                $addDocument->updateDocx($document);
+
             }
         }
 
-        return $this->render('edit', ['document' => $document, 'updateDocumentToBdForm' => $updateDocumentToBdForm]);
+        return $this->render(
+            'edit',
+            ['document' => $document, 'updateDocumentToBdForm' => $updateDocumentToBdForm, 'renameForm' =>
+                $renameForm,'addAnotherImgForm'=>$addAnotherImgForm,'addNewImgForm'=>$addNewImgForm]
+        );
     }
 
     public function actionDocuments()
     {
-
         $documentSearchService = new SearchDocumentsService();
         $query = $documentSearchService->search();
 
@@ -129,11 +178,11 @@ class AdminController extends \yii\web\Controller
         $pages = new Pagination(
             [
 
-                'totalCount'     => $countQuery->count(),
-                'defaultPageSize'       => 5,
-                'forcePageParam' => false,
-                'pageSizeParam'  => false,
-                'pageParam' => Url::to(['admin/documents'])
+                'totalCount'      => $countQuery->count(),
+                'defaultPageSize' => 5,
+                'forcePageParam'  => false,
+                'pageSizeParam'   => false,
+                'pageParam'       => Url::to(['admin/documents']),
 
             ]
         );
@@ -141,7 +190,7 @@ class AdminController extends \yii\web\Controller
         $documents = $countQuery->offset($pages->offset)->limit($pages->limit)->all();
 
 
-        return $this->render('documents',['documents'=>$documents,'pages'=>$pages]);
+        return $this->render('documents', ['documents' => $documents, 'pages' => $pages]);
     }
 
     public function actionDelete($documentId)
@@ -151,10 +200,41 @@ class AdminController extends \yii\web\Controller
 
         return Yii::$app->response->redirect(["admin/documents/"]);
     }
+
     public function actionDownload($docxId)
     {
         $file = Docx::find()->where("id = $docxId")->one();
         Yii::$app->response->sendFile($file->path)->send();
+    }
+
+    public function actionSector()
+    {
+        $sectorForm = new AddSectorInfoForm();
+        if (Yii::$app->request->post()) {
+            $sectorForm->load(Yii::$app->request->post());
+            if ($sectorForm->validate()) {
+                $addSectorService = new AddSectorInfoService();
+                $addSectorService->addSector($sectorForm);
+
+                return Yii::$app->response->redirect(["admin/documents/"]);
+            }
+        }
+
+        return $this->render('sector', ['sectorFom' => $sectorForm]);
+    }
+
+
+    public function actionRemove($imgId, $docId)
+    {
+        $imgService = new ImgService();
+        $imgService->deleteImg($imgId);
+
+        return Yii::$app->response->redirect(["admin/edit/$docId"]);
+    }
+
+    public function actionRename($imgId, $docId)
+    {
+        return Yii::$app->response->redirect(["admin/edit/$docId"]);
     }
 
 }

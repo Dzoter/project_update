@@ -586,20 +586,21 @@ use yii\widgets\ActiveForm;
                     </div>
                     <input type="button" value="Add Photo" onmousedown="viewDivOne()">
                     <div class="row" id="div1" style="display: none">
-                        <?= $form->field($addDocumentToBdForm,'fileName[]')->textInput()->label(false); ?>
+                        <?= $form->field($addDocumentToBdForm,'fileName[]')->textInput( ['placeholder' => 'Photo Name'])
+                            ->label(false) ?>
 
                         <?= $form->field(
                             $addDocumentToBdForm,
                             'files[]')->fileInput([
                             'multiple' => true,
-                        ]) ?>
+                        ])->label(false) ?>
                     </div>
 
 
 
                     <input type="button" id="btn2" style="display:none;" value="Add Photo" onmousedown="viewDivTwo()">
                     <div class="row" id="div2" style="display: none">
-                        <?= $form->field($addDocumentToBdForm,'fileName[]')->textInput()->label(false); ?>
+                        <?= $form->field($addDocumentToBdForm,'fileName[]')->textInput(['placeholder' => 'Photo Name'])->label(false); ?>
 
                         <?= $form->field(
                             $addDocumentToBdForm,
@@ -612,7 +613,7 @@ use yii\widgets\ActiveForm;
 
                     <input type="button" id="btn3" style="display:none;" value="Add Photo" onmousedown="viewDivThree()">
                     <div class="row" id="div3" style="display: none">
-                        <?= $form->field($addDocumentToBdForm,'fileName[]')->textInput()->label(false); ?>
+                        <?= $form->field($addDocumentToBdForm,'fileName[]')->textInput(['placeholder' => 'Photo Name'])->label(false); ?>
 
                         <?= $form->field(
                             $addDocumentToBdForm,
@@ -625,7 +626,7 @@ use yii\widgets\ActiveForm;
 
                     <input type="button" id="btn4" style="display:none;" value="Add Photo" onmousedown="viewDivFour()">
                     <div class="row" id="div4" style="display: none">
-                        <?= $form->field($addDocumentToBdForm,'fileName[]')->textInput()->label(false); ?>
+                        <?= $form->field($addDocumentToBdForm,'fileName[]')->textInput(['placeholder' => 'Photo Name'])->label(false); ?>
 
                         <?= $form->field(
                             $addDocumentToBdForm,
@@ -638,7 +639,7 @@ use yii\widgets\ActiveForm;
 
                     <input type="button" id="btn5" style="display:none;" value="Add Photo" onmousedown="viewDivFive()">
                     <div class="row" id="div5" style="display: none">
-                        <?= $form->field($addDocumentToBdForm,'fileName[]')->textInput()->label(false); ?>
+                        <?= $form->field($addDocumentToBdForm,'fileName[]')->textInput(['placeholder' => 'Photo Name'])->label(false); ?>
 
                         <?= $form->field(
                             $addDocumentToBdForm,
@@ -650,7 +651,7 @@ use yii\widgets\ActiveForm;
 
                     <input type="button" id="btn6" style="display:none;" value="Add Photo" onmousedown="viewDivSix()">
                     <div class="row" id="div6" style="display: none">
-                        <?= $form->field($addDocumentToBdForm,'fileName[]')->textInput()->label(false); ?>
+                        <?= $form->field($addDocumentToBdForm,'fileName[]')->textInput(['placeholder' => 'Photo Name'])->label(false); ?>
 
                         <?= $form->field(
                             $addDocumentToBdForm,
@@ -662,7 +663,7 @@ use yii\widgets\ActiveForm;
 
                     <input type="button" id="btn7" style="display:none;" value="Add Photo" onmousedown="viewDivSeven()">
                     <div class="row" id="div7" style="display: none">
-                        <?= $form->field($addDocumentToBdForm,'fileName[]')->textInput()->label(false); ?>
+                        <?= $form->field($addDocumentToBdForm,'fileName[]')->textInput(['placeholder' => 'Photo Name'])->label(false); ?>
 
                         <?= $form->field(
                             $addDocumentToBdForm,
@@ -674,7 +675,7 @@ use yii\widgets\ActiveForm;
 
                     <input type="button" id="btn8" style="display:none;" value="Add Photo" onmousedown="viewDivEight()">
                     <div class="row" id="div8" style="display: none">
-                        <?= $form->field($addDocumentToBdForm,'fileName[]')->textInput()->label(false); ?>
+                        <?= $form->field($addDocumentToBdForm,'fileName[]')->textInput(['placeholder' => 'Photo Name'])->label(false); ?>
 
                         <?= $form->field(
                             $addDocumentToBdForm,
@@ -686,7 +687,7 @@ use yii\widgets\ActiveForm;
 
                     <input type="button" id="btn9" style="display:none;" value="Add Photo" onmousedown="viewDivNine()">
                     <div class="row" id="div9" style="display: none">
-                        <?= $form->field($addDocumentToBdForm,'fileName[]')->textInput()->label(false); ?>
+                        <?= $form->field($addDocumentToBdForm,'fileName[]')->textInput(['placeholder' => 'Photo Name'])->label(false); ?>
 
                         <?= $form->field(
                             $addDocumentToBdForm,
@@ -698,7 +699,7 @@ use yii\widgets\ActiveForm;
 
                     <input type="button" id="btn10" style="display:none;" value="Add Photo" onmousedown="viewDivTen()">
                     <div class="row" id="div10" style="display: none">
-                        <?= $form->field($addDocumentToBdForm,'fileName[]')->textInput()->label(false); ?>
+                        <?= $form->field($addDocumentToBdForm,'fileName[]')->textInput(['placeholder' => 'Photo Name'])->label(false); ?>
 
                         <?= $form->field(
                             $addDocumentToBdForm,
@@ -710,7 +711,7 @@ use yii\widgets\ActiveForm;
 
                     <input type="button" id="btn11" style="display:none;" value="Add Photo" onmousedown="viewDivEleven()">
                     <div class="row" id="div11" style="display: none">
-                        <?= $form->field($addDocumentToBdForm,'fileName[]')->textInput()->label(false); ?>
+                        <?= $form->field($addDocumentToBdForm,'fileName[]')->textInput(['placeholder' => 'Photo Name'])->label(false); ?>
 
                         <?= $form->field(
                             $addDocumentToBdForm,
@@ -722,7 +723,7 @@ use yii\widgets\ActiveForm;
 
                     <input type="button" id="btn12" style="display:none;" value="Add Photo" onmousedown="viewDivTwelve()">
                     <div class="row" id="div12" style="display: none">
-                        <?= $form->field($addDocumentToBdForm,'fileName[]')->textInput()->label(false); ?>
+                        <?= $form->field($addDocumentToBdForm,'fileName[]')->textInput(['placeholder' => 'Photo Name'])->label(false); ?>
 
                         <?= $form->field(
                             $addDocumentToBdForm,
