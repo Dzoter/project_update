@@ -236,7 +236,7 @@ class AddAdminDocumentService
     public function createDocx( Documents $document)
     {
 
-        $docx = new \PhpOffice\PhpWord\TemplateProcessor(Url::to('@app/web/uploadDocx/reviews.docx'));
+        $docx = new \PhpOffice\PhpWord\TemplateProcessor(Url::to('@app/web/uploadDocx/test.docx'));
         $uploadDir = __DIR__;
 
 
@@ -437,7 +437,7 @@ class AddAdminDocumentService
                     $docx->cloneBlock("files_left_$fileNumberLeftSide",1, true, false);
                     $arrayOfDockNumbersLeft[] = $fileNumberLeftSide;
 
-                    $test = $fileNumberLeftSide;
+                    $mayBeForNullImg = $fileNumberLeftSide;
                     ++$fileNumberLeftSide;
                 } else{
                     $docx->setValue("files_name_right_$fileNumberRightSide",$photoObj->name);
@@ -453,28 +453,34 @@ class AddAdminDocumentService
                 ++$fileNumber;
 
             }
-            $docx->setValue("files_name_right_$test",'photo may be here');
-            $docx->setValue("files_path_right_$test",'');
+            $docx->setValue("files_name_right_$mayBeForNullImg",'photo may be here');
+            $docx->setValue("files_path_right_$mayBeForNullImg",'');
 
             $resultArrayLeft = array_diff($vanilArray,$arrayOfDockNumbersLeft);
-//            $resultArrayRight = array_diff($vanilArray,$arrayOfDockNumbersRight);
+
 
 
             foreach ($resultArrayLeft as $number){
                 $docx->cloneBlock("files_left_$number", 0, true, true);
 
             }
-//            foreach ($resultArrayRight as $number){
-//
-//                $docx->cloneBlock("files_right_$number", 0, true, false);
-//
-//            }
+            foreach ($vanilArray as $number){
+                $docx->cloneBlock("files_left_$number", 0,true,true);
+
+            }
 
         } else {
-                foreach ($vanilArray as $number){
-                    $docx->cloneBlock("files_left_$number", 0);
 
-                }
+        $docx->cloneBlock("files_left_0", 0,true,false);
+        $docx->cloneBlock("files_left_1", 0,true,false);
+        $docx->cloneBlock("files_left_2", 0,true,false);
+        $docx->cloneBlock("files_left_3", 0,true,false);
+        $docx->cloneBlock("files_left_4", 0,true,false);
+        $docx->cloneBlock("files_left_5", 0,true,false);
+        $docx->cloneBlock("files_left_6", 0,true,false);
+        $docx->cloneBlock("files_left_7", 0,true,false);
+        $docx->cloneBlock("files_left_8", 0,true,false);
+        $docx->cloneBlock("files_left_9", 0,true,false);
 
         }
 

@@ -8,7 +8,7 @@ class SearchDocumentsService
 {
     public function search()
     {
-        return Documents::find();
+        return Documents::find()->orderBy(['id'=>SORT_DESC]);
     }
 
 
