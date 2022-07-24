@@ -213,7 +213,7 @@ use yii\widgets\ActiveForm;
                             'report_date',
                             ['options' => ['class' => 'col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12 mb-5']]
                         )->textInput(
-                            ['type' => 'date']
+                            ['type' => 'date','value'=>date("Y-m-d")]
                         )->label()
                         ?>
                     </div>

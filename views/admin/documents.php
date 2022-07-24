@@ -75,9 +75,11 @@ use yii\helpers\Html;
                         </div>
                         <div class="card-body">
                             <blockquote class="blockquote mb-0">
-                                <p><?=$file->id?></p>
-                                <footer class="blockquote-footer">Someone famous in
-                                    <cite title="Source Title">Source Title</cite>
+                                <p><?=$document->client?>,<?=$document->town?>-<?=$document->street?></p>
+
+                                <footer class="blockquote-footer">
+                                    <cite title="Source Title"><?=implode('', \app\services\documents\GetAllSecondaryInfoOfDocumentsService
+                                        ::getSecondaryInfoPurporse($document->id))?></cite>
                                 </footer>
                             </blockquote>
                         </div>

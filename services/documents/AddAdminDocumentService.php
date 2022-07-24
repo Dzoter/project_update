@@ -24,8 +24,10 @@ class AddAdminDocumentService
     {
         if ($params === 'add') {
             $document = new Documents();
+
         } elseif ($params === 'update') {
             $document = Documents::find()->where(['id' => $documentId])->one();
+
         }
 
         $document->property_number = $addDocumentToBdForm->property_number;
@@ -315,23 +317,104 @@ class AddAdminDocumentService
         $basisValues = implode(',',GetAllSecondaryInfoOfDocumentsService::getSecondaryInfoBasis($document->id));
 
 
-        $docx->cloneBlock('vb_mar', 1, true, true);
-        $docx->cloneBlock('vb_mar_vac_poss', 1, true, true);
-        $docx->cloneBlock('vb_mar_180', 1, true, true);
-        $docx->cloneBlock('vb_mar_90', 1, true, true);
-        $docx->cloneBlock('vb_mar_1', 1, true, true);
-        $docx->cloneBlock('vb_mar_2', 1, true, true);
-        $docx->cloneBlock('vb_mar_3', 1, true, true);
-        $docx->cloneBlock('vb_mar_gross', 1, true, true);
-        $docx->cloneBlock('vb_mar_eus', 1, true, true);
-        $docx->cloneBlock('vb_mar_aggr', 1, true, true);
-        $docx->cloneBlock('vb_mar_rent', 1, true, true);
-        $docx->cloneBlock('vb_mar_reinst', 1, true, true);
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         if (!strpos($basisValues, 'Market Value')) {
             $docx->deleteBlock('vb_mar');
         }
+
+        $arrayBasicValues = GetAllSecondaryInfoOfDocumentsService::getSecondaryInfoBasis($document->id);
+
+        if (in_array('Market Value', $arrayBasicValues, true)){
+            $docx->cloneBlock('vb_mar_t', 1, true, true);
+            $docx->cloneBlock('vb_mar', 1, true, true);
+        } else{
+            $docx->cloneBlock('vb_mar_t', 0, true, true);
+            $docx->cloneBlock('vb_mar', 0, true, true);
+        }
+        if (in_array('Market Value (special assumption vacant posession)', $arrayBasicValues, true)){
+            $docx->cloneBlock('vb_mar_vac_poss_t', 1, true, true);
+            $docx->cloneBlock('vb_mar_vac_poss', 1, true, true);
+        } else {
+            $docx->cloneBlock('vb_mar_vac_poss_t', 0, true, true);
+            $docx->cloneBlock('vb_mar_vac_poss', 0, true, true);
+        }
+        if (in_array('Market Value (special assumption 180 days)', $arrayBasicValues, true)){
+            $docx->cloneBlock('vb_mar_180_t', 1, true, true);
+            $docx->cloneBlock('vb_mar_180', 1, true, true);
+        } else {
+            $docx->cloneBlock('vb_mar_180_t', 0, true, true);
+            $docx->cloneBlock('vb_mar_180', 0, true, true);
+        }
+        if (in_array('Market Rent', $arrayBasicValues, true)){
+            $docx->cloneBlock('vb_mar_rent_t', 1, true, true);
+            $docx->cloneBlock('vb_mar_rent', 1, true, true);
+        } else {
+            $docx->cloneBlock('vb_mar_rent_t', 0, true, true);
+            $docx->cloneBlock('vb_mar_rent', 0, true, true);
+        }
+        if (in_array('Reinstatememnt Value', $arrayBasicValues, true)){
+            $docx->cloneBlock('vb_mar_reinst_t', 1, true, true);
+            $docx->cloneBlock('vb_mar_reinst', 1, true, true);
+        } else {
+            $docx->cloneBlock('vb_mar_reinst_t', 0, true, true);
+            $docx->cloneBlock('vb_mar_reinst', 0, true, true);
+        }
+
+        if (in_array('Market Value (special assumption 90 days)', $arrayBasicValues, true)){
+            $docx->cloneBlock('vb_mar_90', 1, true, true);
+        } else {
+            $docx->cloneBlock('vb_mar_90', 0, true, true);
+        }
+
+        if (in_array('Market Value (1)', $arrayBasicValues, true)){
+            $docx->cloneBlock('vb_mar_1', 1, true, true);
+        } else {
+            $docx->cloneBlock('vb_mar_1', 0, true, true);
+        }
+        if (in_array('Market Value (2)', $arrayBasicValues, true)){
+            $docx->cloneBlock('vb_mar_2', 1, true, true);
+        } else {
+            $docx->cloneBlock('vb_mar_2', 0, true, true);
+        }
+        if (in_array('Market Value (3)', $arrayBasicValues, true)){
+            $docx->cloneBlock('vb_mar_3', 1, true, true);
+        } else {
+            $docx->cloneBlock('vb_mar_3', 0, true, true);
+        }
+
+        if (in_array('Gross Development Value', $arrayBasicValues, true)){
+            $docx->cloneBlock('vb_mar_gross', 1, true, true);
+        } else {
+            $docx->cloneBlock('vb_mar_gross', 0, true, true);
+        }
+        if (in_array('EUV-SH', $arrayBasicValues, true)){
+            $docx->cloneBlock('vb_mar_eus', 1, true, true);
+        } else {
+            $docx->cloneBlock('vb_mar_eus', 0, true, true);
+        }
+
+        if (in_array('Aggregate Market Value (MV-VP)', $arrayBasicValues, true)){
+            $docx->cloneBlock('vb_mar_aggr', 1, true, true);
+        } else {
+            $docx->cloneBlock('vb_mar_aggr', 0, true, true);
+        }
+
+
+
+
 
 
 
@@ -353,15 +436,21 @@ class AddAdminDocumentService
 
 
         $sector_overview = GetAllSecondaryInfoOfDocumentsService::getSecondaryInfoSector($document->id);
-        $sector = array();
+        $sector = [];
         if ($sector_overview){
+            $sectorNumber = 0;
+
             foreach ($sector_overview as $value)
             {
-                $sectorInfo = SectorOverview::find()->where(['name']===$value)->one();
-                $sector[] = array('sec_val' => $sectorInfo->info);
+                $sectorInfo = SectorOverview::find()->where(['name'=>$value])->one();
+                $sector[$sectorNumber] = ['sec_val'=>$sectorInfo->info];
+                ++$sectorNumber;
             }
 
-            $docx->cloneBlock('sector_overview', 1, true, false, $sector);
+            $countSectorOverview = count($sector);
+
+
+            $docx->cloneBlock('sector_overview', 0, true, false,$sector);
         } else {
             $docx->cloneBlock('sector_overview', 0, true, false, $sector);
         }
