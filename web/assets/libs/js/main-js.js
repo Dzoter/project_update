@@ -127,6 +127,29 @@ jQuery(document).ready(function($) {
 
 
    
-   
+   $('.field-adddocumenttobdform-valuation_date input[type="date"]').change(function(){
+    if($('#adddocumenttobdform-same_as_inspection input.yes').is(':checked')){
+      $('.field-adddocumenttobdform-inspection_date input[type="date"]').val($(this).val());
+    }
+  });
+
+
+  $('.field-adddocumenttobdform-inspection_date input[type="date"]').change(function(){
+    if($('#adddocumenttobdform-same_as_inspection input.yes').is(':checked')){
+      $('.field-adddocumenttobdform-valuation_date input[type="date"]').val($(this).val());
+    }
+  });
+$('#adddocumenttobdform-same_as_inspection input').change(function(){
+    if($('#adddocumenttobdform-same_as_inspection input.yes').is(':checked')){
+      $('.field-adddocumenttobdform-valuation_date input[type="date"]').val($('.field-adddocumenttobdform-inspection_date input[type="date"]').val());
+    }
+  });
+$('#adddocumenttobdform-double_signed input').change(function(){
+    if($('#adddocumenttobdform-double_signed input.yes').is(':checked')){
+      $('.field-adddocumenttobdform-valuer_2').collapse('show');
+    }else{
+      $('.field-adddocumenttobdform-valuer_2').collapse('hide');
+    }
+  });
 
 // });

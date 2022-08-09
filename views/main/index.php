@@ -3,6 +3,9 @@
 /* @var object $pages */
 
 ?>
+<a href = "<?=\yii\helpers\Url::to(["admin/login/"])?>">login</a>
+<hr>
+<a href = "<?=\yii\helpers\Url::to(["admin/documents/"])?>">documents</a>
 <header class="masthead" style="background-image: url('/web/images/home-bg.jpg')">
     <div class="container">
         <div class="row">

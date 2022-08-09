@@ -238,14 +238,28 @@ use yii\widgets\ActiveForm;
                                     )->one();
                                     if ($document->same_as_inspection === $index) {
                                         $return = '<label class="custom-control custom-radio">';
-                                        $return .= '<input class="custom-control-input" type="radio" name="'.$name
-                                            .'" value="'.$value.'" tabindex="3" checked>';
+                                        if ($label === 'yes'){
+                                            $return .= '<input class="custom-control-input yes" type="radio" name="'
+                                                .$name
+                                                .'" value="'.$value.'" tabindex="3" checked>';
+                                        } else {
+                                            $return .= '<input class="custom-control-input no" type="radio" name="'
+                                                .$name
+                                                .'" value="'.$value.'" tabindex="3" checked>';
+                                        }
                                         $return .= '<span class="custom-control-label">'.ucwords($label).'</span>';
                                         $return .= '</label>';
                                     } else {
                                         $return = '<label class="custom-control custom-radio">';
-                                        $return .= '<input class="custom-control-input" type="radio" name="'.$name
-                                            .'" value="'.$value.'" tabindex="3">';
+                                        if ($label === 'yes'){
+                                            $return .= '<input class="custom-control-input yes" type="radio" name="'
+                                                .$name
+                                                .'" value="'.$value.'" tabindex="3" checked>';
+                                        } else {
+                                            $return .= '<input class="custom-control-input no" type="radio" name="'
+                                                .$name
+                                                .'" value="'.$value.'" tabindex="3" checked>';
+                                        }
                                         $return .= '<span class="custom-control-label">'.ucwords($label).'</span>';
                                         $return .= '</label>';
                                     }
@@ -330,14 +344,29 @@ use yii\widgets\ActiveForm;
                                     )->one();
                                     if ($document->double_signed === $index) {
                                         $return = '<label class="custom-control custom-radio">';
-                                        $return .= '<input class="custom-control-input" type="radio" name="'.$name
-                                            .'" value="'.$value.'" tabindex="3" checked>';
+                                        if ($label === 'yes'){
+                                            $return .= '<input class="custom-control-input yes" type="radio" name="'
+                                                .$name
+                                                .'" value="'.$value.'" tabindex="3" checked>';
+                                        } else {
+                                            $return .= '<input class="custom-control-input no" type="radio" name="'
+                                                .$name
+                                                .'" value="'.$value.'" tabindex="3" checked>';
+                                        }
+
                                         $return .= '<span class="custom-control-label">'.ucwords($label).'</span>';
                                         $return .= '</label>';
                                     } else {
                                         $return = '<label class="custom-control custom-radio">';
-                                        $return .= '<input class="custom-control-input" type="radio" name="'.$name
-                                            .'" value="'.$value.'" tabindex="3">';
+                                        if ($label === 'yes'){
+                                            $return .= '<input class="custom-control-input yes" type="radio" name="'
+                                                .$name
+                                                .'" value="'.$value.'" tabindex="3" checked>';
+                                        } else {
+                                            $return .= '<input class="custom-control-input no" type="radio" name="'
+                                                .$name
+                                                .'" value="'.$value.'" tabindex="3" checked>';
+                                        }
                                         $return .= '<span class="custom-control-label">'.ucwords($label).'</span>';
                                         $return .= '</label>';
                                     }
@@ -352,14 +381,16 @@ use yii\widgets\ActiveForm;
                         ?>
                     </div>
                     <div class="row">
+                        
                         <?= $form->field(
                             $updateDocumentToBdForm,
                             'valuer_2',
-                            ['options' => ['class' => 'col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb-3']]
+                            ['options' => ['class' => 'col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb-3 collapse']]
                         )->textInput(
                             ['value' => $document->valuer_2]
                         )->label()
                         ?>
+                        
                     </div>
                     <div class="row">
                         <?= $form->field(

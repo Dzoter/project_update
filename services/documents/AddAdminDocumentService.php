@@ -225,6 +225,42 @@ class AddAdminDocumentService
                 $tenure->delete();
             }
         }
+        $docx = DocumentsDocx::find()->where(['documents_id'=>$documentId])->one();
+        $docx->delete();
+       $files = DocumentsFiles::find()->where(['documents_id'=>$documentId])->all();
+        if ($files) {
+            foreach ($files as $file) {
+                $file->delete();
+            }
+        }
+        $pathOfFiles = "uploadedimg/$documentId/";
+        $this->deleteSecondaryFiles($pathOfFiles);
+        $pathOfDocx = "uploadDocx/$documentId/";
+        $this->deleteSecondaryFiles($pathOfDocx);
+
+    }
+    public function deleteSecondaryFiles($pathOfFiles){
+
+
+        if (is_dir($pathOfFiles) === true)
+        {
+            $files = array_diff(scandir($pathOfFiles), array('.', '..'));
+
+            foreach ($files as $file)
+            {
+                unlink(realpath($pathOfFiles) . '/' . $file);
+            }
+
+            return rmdir($pathOfFiles);
+        }
+
+        if (is_file($pathOfFiles) === true)
+        {
+            return unlink($pathOfFiles);
+        }
+
+        return false;
+
     }
 
     public function deleteDocument($documentId)
@@ -257,8 +293,8 @@ class AddAdminDocumentService
         $docx->setValue('tenure', implode('',GetAllSecondaryInfoOfDocumentsService::getSecondaryInfoTenure
         ($document->id)));
         $docx->setValue('post_code_first_part', $document->post_code_first_part);
-        $docx->setValue('purpose_of_valuation', GetAllSecondaryInfoOfDocumentsService::getSecondaryInfoPurporse
-        ($document->id));
+        $docx->setValue('purpose_of_valuation', implode('',GetAllSecondaryInfoOfDocumentsService::getSecondaryInfoPurporse
+        ($document->id)));
         $docx->setValue('valuer', $document->valuer);
         $docx->setValue('valuer_2', $document->valuer_2);
         $docx->setValue('inspection_date',date("jS F Y",strtotime($document->inspection_date)) );
@@ -477,11 +513,11 @@ class AddAdminDocumentService
 
 
         if($document->double_signed){
-            $docx->cloneBlock('no_double', 1, true, true);
-            $docx->cloneBlock('double', 0, true, true);
-        }else{
             $docx->cloneBlock('no_double', 0, true, true);
             $docx->cloneBlock('double', 1, true, true);
+        }else{
+            $docx->cloneBlock('no_double', 1, true, true);
+            $docx->cloneBlock('double', 0, true, true);
         }
 
 
