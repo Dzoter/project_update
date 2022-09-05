@@ -55,6 +55,7 @@ use yii\widgets\ActiveForm;
 
 
                     <?php
+
                     $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data ']]) ?>
                     <div class="row">
                         <?= $form->field(
@@ -774,7 +775,7 @@ use yii\widgets\ActiveForm;
                     <hr>
 
                     <?php
-                    $files = \app\services\documents\GetAllSecondaryInfoOfDocumentsService::getSecondaryInfoFiles
+                    $files = \app\services\documents\GetAllSecondaryInfoOfDocumentsService::getSecondaryInfoImgs
                     (
                         $document->id
                     );
@@ -782,7 +783,7 @@ use yii\widgets\ActiveForm;
                         <p><?=$file->name?></p>
                         <img src="<?= Url::to('/'.$file->path) ?>" width="300px" height="300px"
                              alt="Изображения загруженные при добавлении документа">
-                        <a href="<?=Url::to(["admin/remove/$file->id/$document->id"])?>">Удалить</a>
+                        <a href="<?=Url::to(["admin/remove-img/$file->id/$document->id"])?>">Удалить</a>
                         <?php
                     $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]) ?>
 
@@ -894,9 +895,25 @@ use yii\widgets\ActiveForm;
 
 
 
+
+                    <?php
+                    $files = \app\services\documents\GetAllSecondaryInfoOfDocumentsService::getSecondaryInfoPdfs
+                    (
+                        $document->id
+                    );
+                    foreach ($files as $file):?>
+                    <p><?=$file->name?></p>
+                    <img src="<?= Url::to('/'.$file->path) ?>" width="300px" height="300px"
+                         alt="Изображения загруженные при добавлении документа">
+                    <a href="<?=Url::to(["admin/remove-pdf/$file->id/$document->id"])?>">Удалить</a>
+
+                    <?php endforeach;?>
+
+
                 </div>
             </div>
         </div>
+
         <!-- ============================================================== -->
         <!-- end validation form -->
         <!-- ============================================================== -->

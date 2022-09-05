@@ -161,6 +161,10 @@ class Documents extends \yii\db\ActiveRecord
     {
         return $this->hasMany(DocumentsDocx::className(), ['documents_id' => 'id']);
     }
+    public function getDocumentsPdf()
+    {
+        return $this->hasMany(DocumentsPdf::className(), ['documents_id' => 'id']);
+    }
 
 
 

@@ -3,20 +3,15 @@
 use yii\db\Migration;
 
 /**
- * Class m220717_072239_new_table
+ * Handles the creation of table `{{%documents_docx}}`.
  */
-class m220717_072239_new_table extends Migration
+class m220823_172308_create_documents_docx_table extends Migration
 {
     /**
      * {@inheritdoc}
      */
     public function safeUp()
     {
-        $this->createTable('docx', [
-            'id'             => $this->primaryKey(),
-            'path' => $this->string('255')->notNull(),
-
-        ]);
 
         $this->createTable('documents_docx', [
             'id'             => $this->primaryKey(),
@@ -38,7 +33,6 @@ class m220717_072239_new_table extends Migration
             'documents',
             'id'
         );
-
     }
 
     /**
@@ -46,23 +40,6 @@ class m220717_072239_new_table extends Migration
      */
     public function safeDown()
     {
-        echo "m220717_072239_new_table cannot be reverted.\n";
-
-        return false;
+        $this->dropTable('{{%documents_docx}}');
     }
-
-    /*
-    // Use up()/down() to run migration code without a transaction.
-    public function up()
-    {
-
-    }
-
-    public function down()
-    {
-        echo "m220717_072239_new_table cannot be reverted.\n";
-
-        return false;
-    }
-    */
 }

@@ -12,8 +12,9 @@ use app\models\forms\AdminLoginForm;
 use app\models\forms\RefactorImgForm;
 use app\services\documents\AddAdminDocumentService;
 use app\services\documents\AddSectorInfoService;
-use app\services\documents\ImgService;
+use app\services\documents\EditFilesService;
 use app\services\documents\SearchDocumentsService;
+use app\services\referenceTables\FilesService;
 use Yii;
 use yii\data\Pagination;
 use yii\filters\AccessControl;
@@ -57,7 +58,8 @@ class AdminController extends \yii\web\Controller
                             'error',
                             'download',
                             'sector',
-                            'remove',
+                            'remove-img',
+                            'remove-pdf',
                             'rename',
                         ],
                         'roles'   => ['@'],
@@ -119,44 +121,45 @@ class AdminController extends \yii\web\Controller
 
     public function actionEdit($documentId)
     {
-
         $document = Documents::find()->where(['id' => $documentId])->one();
-        $renameForm = new RefactorImgForm();
         $updateDocumentToBdForm = new AddDocumentToBdForm();
+        $renameForm = new RefactorImgForm();
         $addAnotherImgForm = new AddAnotherImgForm();
         $addNewImgForm = new AddNewImageForm();
+
         if (Yii::$app->request->post('AddDocumentToBdForm')) {
+
             $updateDocumentToBdForm->load(Yii::$app->request->post());
             if ($updateDocumentToBdForm->validate()) {
                 $addDocument = new AddAdminDocumentService();
-                $addDocument->updateDocument($documentId, $updateDocumentToBdForm);
+                $addDocument->updateDocument($document, $updateDocumentToBdForm);
                 return Yii::$app->response->redirect(["admin/documents"]);
             }
         } elseif (Yii::$app->request->post('RefactorImgForm')) {
+
             $renameForm->load(Yii::$app->request->post());
             if ($renameForm->validate()) {
-                $addDocument = new AddAdminDocumentService();
-                $imiService = new ImgService();
-                $imiService->refactorImg($renameForm);
-                $addDocument->updateDocx($document);
+                $imiService = new EditFilesService($document);
+                $imiService->editRefactorImgById($renameForm);
+                $imiService->createDocx();
                 return Yii::$app->response->redirect(["admin/edit/$documentId"]);
             }
 
         } elseif (Yii::$app->request->post('AddAnotherImgForm')){
+
             $addAnotherImgForm->load(Yii::$app->request->post());
             if ($addAnotherImgForm->validate()){
-                $addDocument = new AddAdminDocumentService();
-                $imiService = new ImgService();
-                $imiService->addAnotherImg($addAnotherImgForm);
-                $addDocument->updateDocx($document);
+                $imiService = new EditFilesService($document);
+                $imiService->editAnotherImg($addAnotherImgForm);
+                $imiService->createDocx();
             }
         } elseif (Yii::$app->request->post('AddNewImageForm')){
+
             $addNewImgForm->load(Yii::$app->request->post());
             if ($addNewImgForm->validate()){
-                $addDocument = new AddAdminDocumentService();
-                $imiService = new ImgService();
-                $imiService->addNewImg($addNewImgForm);
-                $addDocument->updateDocx($document);
+                $imiService = new EditFilesService($document);
+                $imiService->editAddNewFile($addNewImgForm);
+                $imiService->createDocx();
 
             }
         }
@@ -224,11 +227,20 @@ class AdminController extends \yii\web\Controller
     }
 
 
-    public function actionRemove($imgId, $docId)
+    public function actionRemoveImg($imgId, $docId)
     {
-        $imgService = new ImgService();
-        $imgService->deleteImg($imgId);
+        $document = Documents::find()->where(['id'=>$docId])->one();
+        $imgService = new EditFilesService($document);
+        $imgService->editDeleteImgById($imgId);
 
+        return Yii::$app->response->redirect(["admin/edit/$docId"]);
+    }
+
+    public function actionRemovePdf($pdfId,$docId)
+    {
+        $document = Documents::find()->where(['id'=>$docId])->one();
+        $imgService = new EditFilesService($document);
+        $imgService->editDeletePdfById($pdfId);
         return Yii::$app->response->redirect(["admin/edit/$docId"]);
     }
 

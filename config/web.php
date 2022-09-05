@@ -59,10 +59,10 @@ $config = [
                 'admin/edit/<documentId:\d+>' => 'admin/edit',
                 'admin/delete/<documentId:\d+>' => 'admin/delete',
                 'admin/download/<docxId:\d+>' => 'admin/download',
-                'admin/remove/<imgId:\d+>/<docId:\d+>' => 'admin/remove',
+                'admin/remove-img/<imgId:\d+>/<docId:\d+>' => 'admin/remove-img',
+                'admin/remove-pdf/<pdfId:\d+>/<docId:\d+>' => 'admin/remove-pdf',
                 'admin/rename/<imgId:\d+>/<docId:\d+>' => 'admin/rename',
-
-
+                'api/GetSertificateList' => 'api/get-sertificate-list'
 
             ],
         ],

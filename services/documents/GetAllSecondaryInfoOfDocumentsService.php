@@ -8,6 +8,7 @@ use app\models\Documents;
 use app\models\Docx;
 use app\models\Files;
 use app\models\Methodology;
+use app\models\Pdf;
 use app\models\PurposeOfValuation;
 use app\models\SectorOverview;
 use app\models\Tenure;
@@ -126,7 +127,7 @@ class GetAllSecondaryInfoOfDocumentsService
         return $secondaryData;
     }
 
-    public static function getSecondaryInfoFiles($documentId)
+    public static function getSecondaryInfoImgs($documentId)
     {
         $document = Documents::find()->where(['id'=>$documentId])->one();
         $secondaryData = [];
@@ -142,6 +143,26 @@ class GetAllSecondaryInfoOfDocumentsService
             }
 
         }
+        return $secondaryData;
+    }
+    public static function getSecondaryInfoPdfs($documentId)
+    {
+        $document = Documents::find()->where(['id'=>$documentId])->one();
+        $secondaryData = [];
+        $idsData = [];
+
+        if ($document->documentsPdf){
+            foreach ($document->documentsPdf as $secondaryTables => $secondaryTable){
+                $idsData[] = $secondaryTable->pdf_id;
+            }
+            foreach ($idsData as $id){
+
+                $table = Pdf::find()->where(['id'=>$id])->one();
+                $secondaryData[] = $table;
+            }
+
+        }
+
         return $secondaryData;
     }
     public static function getDocx($documentId)

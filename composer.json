@@ -19,8 +19,11 @@
         "yiisoft/yii2-bootstrap4": "~2.0.0",
         "yiisoft/yii2-swiftmailer": "~2.0.0 || ~2.1.0",
       "ext-json": "*",
-        "phpoffice/phpword": "^0.18.3"
-
+        "phpoffice/phpword": "^0.18.3",
+        "guzzlehttp/guzzle": "^5",
+        "ext-dom": "*",
+        "robgridley/ghostscript": "dev-master",
+        "electrolinux/phpquery": "^0.9.6"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",
