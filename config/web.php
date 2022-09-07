@@ -1,7 +1,14 @@
 <?php
 
-$params = require __DIR__ . '/params.php';
+
+if (file_exists(__DIR__ . '/paramsForProd.php')){
+    $params = require __DIR__ . '/paramsForProd.php';
+} else {
+    $params = require __DIR__ . '/params.php';
+}
+
 $db = require __DIR__ . '/db.php';
+
 
 $config = [
     'id' => 'basic',
@@ -12,9 +19,11 @@ $config = [
         '@npm'   => '@vendor/npm-asset',
     ],
     'components' => [
+
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'wCFJ11xouO_YsjY21g5uQBJHxt9S1iSb',
+
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
@@ -69,7 +78,9 @@ $config = [
 
     ],
     'params' => $params,
+
     'defaultRoute' => 'main/index',
+
 ];
 
 if (YII_ENV_DEV) {

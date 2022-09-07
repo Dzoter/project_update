@@ -173,6 +173,8 @@ class AdminController extends \yii\web\Controller
 
     public function actionDocuments()
     {
+
+        die();
         $documentSearchService = new SearchDocumentsService();
         $query = $documentSearchService->search();
 

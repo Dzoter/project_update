@@ -4,6 +4,7 @@ namespace app\services\documents;
 
 use app\models\Documents;
 use GuzzleHttp\Client;
+use Yii;
 use yii\helpers\Url;
 
 class ApiService
@@ -24,7 +25,7 @@ class ApiService
 
         $client = new Client();
         $response = $client->get(
-            "https://maps.google.com/maps/api/geocode/json?address=$address&key=AIzaSyAuJZb0MGVPm1CP_QEk3mzTkx3y2rGNayk"
+            "https://maps.google.com/maps/api/geocode/json?address=$address&key=".Yii::$app->params['googleCoordinateApi']
         );
         $status = $response->getStatusCode();
         if ($status === 200) {
@@ -44,7 +45,7 @@ class ApiService
 
 
         $img = file_get_contents(
-            "https://maps.googleapis.com/maps/api/staticmap?center=$coordinate&zoom=13&size=600x300&markers=color:blue%7Clabel:H%7C$coordinate&key=AIzaSyCDa4cdMIa-DFRWFRIQ0-wXXbuGmRUuO7o"
+            "https://maps.googleapis.com/maps/api/staticmap?center=$coordinate&zoom=13&size=600x300&markers=color:blue%7Clabel:H%7C$coordinate&key=".Yii::$app->params['staticMapsGoogleApi']
         );
         if (!file_exists(Url::to("uploadedImg/".$this->document->id))) {
             if (!mkdir($concurrentDirectory = Url::to("uploadedImg/".$this->document->id))
@@ -69,7 +70,7 @@ class ApiService
         $url = 'https://mapapps2.bgs.ac.uk/geoindex/home.html?layer=BGSRadon&location='.$address;
         $response = file_get_contents(
             'https://www.googleapis.com/pagespeedonline/v5/runPagespeed?screenshot=true&url='.urlencode($url)
-            .'&key=AIzaSyBrIbeAXgccK5qrEeT5xhK_Ag9UVWFkkQk'
+            .'&key='.Yii::$app->params['googleGetScreenshotFromPageApi']
         );
         $googlePagespeedObject = json_decode($response, true);
         $screenshot = $googlePagespeedObject['lighthouseResult']['audits']['final-screenshot']['details']['data'];
@@ -89,7 +90,7 @@ class ApiService
     {
         $coordinate = urlencode($this->getCoordinateFromGoogle()['lat'].','.$this->getCoordinateFromGoogle()['lng']);
         $url = 'https://maps.googleapis.com/maps/api/place/search/json?&language=en-GB&location='.$coordinate
-            .'&radius=1000&sensor=false&types=subway_station|train_station&key=AIzaSyCDa4cdMIa-DFRWFRIQ0-wXXbuGmRUuO7o';
+            .'&radius=1000&sensor=false&types=subway_station|train_station&key='.Yii::$app->params['googleNearbySearchApi'];
         $client = new Client();
         $response = $client->get(
             $url
@@ -118,7 +119,7 @@ class ApiService
             $stationCoordinateEncode = urlencode($stationCoordinate['lat']. ',' . $stationCoordinate['lng']);
 
             $url = 'https://maps.googleapis.com/maps/api/distancematrix/json?destinations='.$stationCoordinateEncode.'&origins='
-                .$coordinate.'&units=imperial&key=AIzaSyA8phVaJbT-bPvMi8OcCqw3FEdssXq7xYs';
+                .$coordinate.'&units=imperial&key='.Yii::$app->params['googleDistanceApi'];
             $client = new Client();
             $response = $client->get(
                 $url
