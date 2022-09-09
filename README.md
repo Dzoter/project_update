@@ -1,6 +1,9 @@
 <p>
 paste in vendor php ofice php word phpword.php this
 
+
+<p>
+
 <?php
 /**
  * This file is part of PHPWord - A pure PHP library for reading and writing
@@ -426,6 +429,7 @@ class PhpWord
         return $this;
     }
 }
+</p>
 
 </p>
 <p align="center">
@@ -661,6 +665,6 @@ vendor/bin/codecept run functional,unit --coverage --coverage-html --coverage-xm
 ```
 
 You can see code coverage output under the `tests/_output` directory.
-#   p r o j e c t _ u p d a t e 
- 
- 
+#� �p�r�o�j�e�c�t�_�u�p�d�a�t�e�
+�
+�
